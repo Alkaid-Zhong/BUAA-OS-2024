@@ -38,7 +38,9 @@ if $SORT; then
 
 elif [ ! -z "$CMD" ]; then
     # Your code here. (2/3)
-    cat $FILE | grep $CMD
+    cmd='$5 ~ /'$CMD'/ {print $0}'
+    # echo $cmd
+    awk "$cmd"  $FILE
 elif [ ! -z $PID ]; then
     # Your code here. (3/3)
     :
