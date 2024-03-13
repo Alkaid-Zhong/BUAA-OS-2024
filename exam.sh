@@ -1,7 +1,7 @@
 mkdir test
 cp -r ./code ./test
 cat ./code/14.c
-a=1
+a=0
 while [ $a -lt 16 ]
 do
 	gcc -c ./test/code/$a.c -o ./test/code/$a.o
