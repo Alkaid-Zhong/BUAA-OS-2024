@@ -34,10 +34,11 @@ fi
 # You can remove ":" after finishing.
 if $SORT; then
     # Your code here. (1/3)
-    :
+    sort -k4nr -k3n $FILE
+
 elif [ ! -z "$CMD" ]; then
     # Your code here. (2/3)
-    :
+    cat $FILE | grep $CMD
 elif [ ! -z $PID ]; then
     # Your code here. (3/3)
     :
