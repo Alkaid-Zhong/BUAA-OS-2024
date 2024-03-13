@@ -34,7 +34,7 @@ fi
 # You can remove ":" after finishing.
 if $SORT; then
     # Your code here. (1/3)
-    sort -k4nr -k3n $FILE
+    sort -k4nr -k2n $FILE
 
 elif [ ! -z "$CMD" ]; then
     # Your code here. (2/3)
