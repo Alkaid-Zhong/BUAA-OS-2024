@@ -43,20 +43,11 @@ elif [ ! -z "$CMD" ]; then
     awk "$cmd"  $FILE
 elif [ ! -z $PID ]; then
     # Your code here. (3/3)
-    awk -v input=$PID '
-    {
-	tgt = input
-	flag = 1
-	while(flag) {
-		flag=0
-		if($2==tgt) {
-			print $3
-			tgt=$3
-			flag=1
-			NF=0
-		}
-	}
-    }' $FILE
+    while [ $PID -ne 0 ]
+    do
+        PID=$[`awk -v input=$PID '$2==input {print $3}' $FILE`]
+	echo $PID
+    done
 else
     usage
     exit 1
