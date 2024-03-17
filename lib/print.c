@@ -20,10 +20,11 @@ void vprintfmt(fmt_callback_t out, void *data, const char *fmt, va_list ap) {
 		/* scan for the next '%' */
 		/* Exercise 1.4: Your code here. (1/8) */
 		if (*fmt != '%') {
+			if (*fmt == '\0') {
+				break;
+			}
 			out(data, fmt, 1);
 			fmt++;
-			if(*fmt == '\0')
-				break;
 			continue;
 		}
 
