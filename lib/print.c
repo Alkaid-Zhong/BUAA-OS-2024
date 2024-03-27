@@ -16,6 +16,14 @@ void vprintfmt(fmt_callback_t out, void *data, const char *fmt, va_list ap) {
 	int ladjust;   // output is left-aligned
 	char padc;     // padding char
 
+	//new
+	long num2;
+	long z;
+	
+	char lp = '(';
+	char rp = ')';
+	char dh = ',';
+
 	for (;;) {
 		/* scan for the next '%' */
 		/* Exercise 1.4: Your code here. (1/8) */
@@ -72,7 +80,27 @@ void vprintfmt(fmt_callback_t out, void *data, const char *fmt, va_list ap) {
 		}
 
 		neg_flag = 0;
+
 		switch (*fmt) {
+		case 'p':
+		case 'P':
+			if (long_flag) {
+				num  = va_arg(ap, long int);
+				num2 = va_arg(ap, long int);
+			} else {
+				num  = va_arg(ap, int);
+				num2 = va_arg(ap, int);
+			}
+			z = (num + num2) * (num - num2);
+			z = z < 0 ? -z : z;
+			out(data, &lp, 1);
+			print_num(out, data, num < 0 ? -num : num, 10, num < 0, width, ladjust, padc, 0);
+			out(data, &dh, 1);
+			print_num(out, data, num2 < 0 ? -num2 : num2, 10, num2 < 0, width, ladjust, padc, 0);
+			out(data, &dh, 1);
+			print_num(out, data, z, 10, 0, width, ladjust, padc, 0);
+			out(data, &rp, 1);
+			break;
 		case 'b':
 			if (long_flag) {
 				num = va_arg(ap, long int);
