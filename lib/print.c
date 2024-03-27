@@ -327,7 +327,7 @@ int vscanfmt(scan_callback_t in, void *data, const char *fmt, va_list ap) {
 					res = -res;
 				}
 				*ip = res;	
-				ret++;
+				
 				break;
 			case 'x': // 十六进制
 				// Lab 1-Extra: Your code here. (3/5)
@@ -357,13 +357,13 @@ int vscanfmt(scan_callback_t in, void *data, const char *fmt, va_list ap) {
 					res = -res;
 				}
 				*ip = res;
-				ret++;
+				
 				break;
 			case 'c':
 				// Lab 1-Extra: Your code here. (4/5)
 				cp = va_arg(ap, char*);
 				*cp = ch;
-				ret++;
+				
 				break;
 			case 's':
 				// Lab 1-Extra: Your code here. (5/5)
@@ -379,7 +379,7 @@ int vscanfmt(scan_callback_t in, void *data, const char *fmt, va_list ap) {
 					*cp = ch;
 					cp++;
 				}
-				ret++;
+				
 				break;
 			}
 			fmt++;
