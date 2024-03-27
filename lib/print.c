@@ -286,3 +286,104 @@ void print_num(fmt_callback_t out, void *data, unsigned long u, int base, int ne
 
 	out(data, buf, length);
 }
+
+// lab1 extra 
+int vscanfmt(scan_callback_t in, void *data, const char *fmt, va_list ap) {
+	int *ip;
+	char *cp;
+	char ch;
+	//int base, num;
+	int neg, ret = 0;
+	int res;
+
+	while (*fmt) {
+		if (*fmt == '%') {
+			ret++;
+			fmt++; // 跳过 '%'
+			do {
+				in(data, &ch, 1);
+			} while (ch == ' ' || ch == '\t' || ch == '\n'); // 跳过空白符
+			// 注意，此时 ch 为第一个有效输入字符
+			switch (*fmt) {
+			case 'd': // 十进制
+				// Lab 1-Extra: Your code here. (2/5)
+				ip = va_arg(ap, int*);
+				if (ch == '-') {
+					neg = 1;
+					res = 0;
+				} else {
+					neg = 0;
+					res = ch - '0';
+				}
+				while(1) {
+					in(data, &ch, 1);
+					if ('0' <= ch && ch <= '9') {
+						res = res * 10  + ch - '0';
+					} else {
+						break;
+					}
+				}
+				if (neg == 1) {
+					res = -res;
+				}
+				*ip = res;	
+				ret++;
+				break;
+			case 'x': // 十六进制
+				// Lab 1-Extra: Your code here. (3/5)
+				ip = va_arg(ap, int*);
+				if (ch == '-') {
+					neg = 1;
+					res = 0;
+				} else {
+					neg = 0;
+					if ('0' <= ch && ch <= '9') {
+						res = ch - '0';
+					} else {
+						res = ch + 10 - 'a';
+					}
+				}
+				while(1) {
+					in(data, &ch, 1);
+					if('0' <= ch && ch <= '9') {
+						res = res * 16 + ch - '0';
+					} else if ('a' <= ch && ch <= 'f') {
+						res = res * 16 + ch + 10 - 'a';
+					} else {
+						break;
+					}
+				}
+				if (neg == 1) {
+					res = -res;
+				}
+				*ip = res;
+				ret++;
+				break;
+			case 'c':
+				// Lab 1-Extra: Your code here. (4/5)
+				cp = va_arg(ap, char*);
+				*cp = ch;
+				ret++;
+				break;
+			case 's':
+				// Lab 1-Extra: Your code here. (5/5)
+				cp = va_arg(ap, char*);
+				*cp = ch;
+				cp++;
+				while(1) {
+					in(data, &ch, 1);
+					if (ch == ' ' || ch == '\t' || ch == '\n') {
+						*cp = '\0';
+						break;
+					}
+					*cp = ch;
+					cp++;
+				}
+				ret++;
+				break;
+			}
+			fmt++;
+		}
+	}
+	return ret;
+}
