@@ -107,7 +107,7 @@ void page_init(void) {
 	/* Step 3: Mark all memory below `freemem` as used (set `pp_ref` to 1) */
 	/* Exercise 2.3: Your code here. (3/4) */
 	u_long usedPages = PPN(PADDR(freemem)); // alloced pages
-	int i;
+	u_long i;
 	for (i = 0; i < usedPages; i++) {
 		pages[i].pp_ref = 1;
 	}
@@ -192,6 +192,8 @@ static int pgdir_walk(Pde *pgdir, u_long va, int create, Pte **ppte) {
 	/* Step 1: Get the corresponding page directory entry. */
 	/* Exercise 2.6: Your code here. (1/3) */
 
+	pgdir_entryp = pgdir + PDX(va);
+
 	/* Step 2: If the corresponding page table is not existent (valid) then:
 	 *   * If parameter `create` is set, create one. Set the permission bits 'PTE_C_CACHEABLE |
 	 *     PTE_V' for this new page in the page directory. If failed to allocate a new page (out
@@ -200,8 +202,26 @@ static int pgdir_walk(Pde *pgdir, u_long va, int create, Pte **ppte) {
 	 */
 	/* Exercise 2.6: Your code here. (2/3) */
 
+	if (((*pgdir_entryp) & PTE_V) == 0) {
+		if (create == 1) {
+			if (page_alloc(&pp) == -E_NO_MEM) {
+				*ppte = NULL;
+				return -E_NO_MEM;
+			} else {
+				*pgdir_entryp = page2pa(pp) | PTE_C_CACHEABLE | PTE_V;
+				pp -> pp_ref++;
+			}
+		} else {
+			*ppte = NULL;
+			return -E_NO_MEM;
+		}
+	}
+
 	/* Step 3: Assign the kernel virtual address of the page table entry to '*ppte'. */
 	/* Exercise 2.6: Your code here. (3/3) */
+	// pgdir_entryp -> Pte'pa	PTE_ADDR(*pgdir_entryp)
+	// pte'pa -> page'va		KADDR(PTE_ADDR(*pgdir_entryp))
+	*ppte = (Pte*) KADDR(PTE_ADDR(pgdir_entryp));
 
 	return 0;
 }
@@ -236,14 +256,23 @@ int page_insert(Pde *pgdir, u_int asid, struct Page *pp, u_long va, u_int perm) 
 
 	/* Step 2: Flush TLB with 'tlb_invalidate'. */
 	/* Exercise 2.7: Your code here. (1/3) */
+	
+	tlb_invalidate(asid, va);
 
 	/* Step 3: Re-get or create the page table entry. */
 	/* If failed to create, return the error. */
 	/* Exercise 2.7: Your code here. (2/3) */
 
+	if (pgdir_walk(pgdir, va, 1, &pte) == -E_NO_MEM) {
+		return -E_NO_MEM;
+	}
+
 	/* Step 4: Insert the page to the page table entry with 'perm | PTE_C_CACHEABLE | PTE_V'
 	 * and increase its 'pp_ref'. */
 	/* Exercise 2.7: Your code here. (3/3) */
+	
+	*pte = page2pa(pp) | perm | PTE_C_CACHEABLE | PTE_V;
+	pp->pp_ref++;
 
 	return 0;
 }
