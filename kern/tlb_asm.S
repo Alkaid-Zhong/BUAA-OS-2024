@@ -7,7 +7,7 @@ LEAF(tlb_out)
 	nop
 	/* Step 1: Use 'tlbp' to probe TLB entry */
 	/* Exercise 2.8: Your code here. (1/2) */
-
+	tlbp	
 	nop
 	/* Step 2: Fetch the probe result from CP0.Index */
 	mfc0    t1, CP0_INDEX
@@ -47,6 +47,6 @@ do_tlb_refill_call:
 	nop
 	/* Hint: use 'tlbwr' to write CP0.EntryHi/Lo into a random tlb entry. */
 	/* Exercise 2.10: Your code here. */
-
+	tlbwi
 	jr      ra
 END(do_tlb_refill)
