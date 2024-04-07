@@ -222,7 +222,7 @@ static int pgdir_walk(Pde *pgdir, u_long va, int create, Pte **ppte) {
 	// pgdir_entryp -> Pte'pa	PTE_ADDR(*pgdir_entryp)
 	// pte'pa -> page'va		KADDR(PTE_ADDR(*pgdir_entryp))
 	// offset					KADDR(PTE_ADDR(*pgdir_entryp)) + PTX(va);
-	*ppte = (Pte*) KADDR(PTE_ADDR(*pgdir_entryp));
+	*ppte = (Pte*) KADDR(PTE_ADDR(*pgdir_entryp)) + PTX(va);
 
 	return 0;
 }
