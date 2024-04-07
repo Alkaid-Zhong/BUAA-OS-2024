@@ -117,7 +117,7 @@ void page_init(void) {
 	/* Exercise 2.3: Your code here. (4/4) */
 	for(; i < npage; i++) {
 		pages[i].pp_ref = 0;
-		LIST_INSERT_HEAD(&page_free_list, (pages + i), pp_link);
+		LIST_INSERT_HEAD(&page_free_list, &pages[i], pp_link);
 	}
 
 }
