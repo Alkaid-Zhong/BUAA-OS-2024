@@ -107,6 +107,7 @@ void page_init(void) {
 	/* Step 3: Mark all memory below `freemem` as used (set `pp_ref` to 1) */
 	/* Exercise 2.3: Your code here. (3/4) */
 	u_long usedPages = PPN(PADDR(freemem)); // alloced pages
+	// PPN(pa) physical page number ? = pa >> PGSHIFT
 	u_long i;
 	for (i = 0; i < usedPages; i++) {
 		pages[i].pp_ref = 1;
