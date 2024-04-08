@@ -126,7 +126,7 @@ void page_init(void) {
 	}
 
 	if (DEBUG_OUTPUT) {
-		printk("\033[32mpage_init:\033[0m\tfreemem:%x\tPADDR(freemem):%x\tPPN(...):%x", freemem, PADDR(freemem), usedPages);
+		printk("\033[32mpage_init:\033[0m\tfreemem:%x\tPADDR(freemem):%x\tPPN(...):%x\n", freemem, PADDR(freemem), usedPages);
 	}
 
 }
