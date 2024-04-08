@@ -4,6 +4,7 @@
 #include <mmu.h>
 #include <pmap.h>
 #include <printk.h>
+#include <debugk.h>
 
 /* These variables are set by mips_detect_memory(ram_low_size); */
 static u_long memsize; /* Maximum physical address */
@@ -224,6 +225,13 @@ static int pgdir_walk(Pde *pgdir, u_long va, int create, Pte **ppte) {
 	// pte'pa -> page'va		KADDR(PTE_ADDR(*pgdir_entryp))
 	// offset					KADDR(PTE_ADDR(*pgdir_entryp)) + PTX(va);
 	*ppte = (Pte*) KADDR(PTE_ADDR(*pgdir_entryp)) + PTX(va);
+
+	DEBUGK("*pgdir_entryo:%x PTE_ADDR(*pgdir_entryp):%x KADDR(..):%x PTX(va):%x\n", 
+		*pgdir_entryp, 
+		PTE_ADDR(*pgdir_entryp), 
+		KADDR(PTE_ADDR(*pgdir_entryp)),
+		PTX(va)
+	);
 
 	return 0;
 }
