@@ -227,7 +227,7 @@ static int pgdir_walk(Pde *pgdir, u_long va, int create, Pte **ppte) {
 	*ppte = (Pte*) KADDR(PTE_ADDR(*pgdir_entryp)) + PTX(va);
 
 	if (DEBUG_OUTPUT) {
-		printk("*pgdir_entryo:%x PTE_ADDR(*pgdir_entryp):%x KADDR(..):%x PTX(va):%x\n", 
+		printk("DEBUG:\t*pgdir_entryo:%x\tPTE_ADDR(*pgdir_entryp):%x\tKADDR(..):%x\tPTX(va):%x\n", 
 			*pgdir_entryp, 
 			PTE_ADDR(*pgdir_entryp), 
 			KADDR(PTE_ADDR(*pgdir_entryp)),
