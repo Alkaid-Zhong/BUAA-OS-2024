@@ -239,7 +239,7 @@ static int pgdir_walk(Pde *pgdir, u_long va, int create, Pte **ppte) {
 	*ppte = (Pte*) KADDR(PTE_ADDR(*pgdir_entryp)) + PTX(va);
 
 	if (DEBUG_OUTPUT) {
-		printk("\033[32mDEBUG:\033[0m \t*pgdir_entryo:%x \tPTE_ADDR(*pgdir_entryp):%x \tKADDR(..):%x \tPTX(va):%x \t *ppte:%x\n", 
+		printk("\033[32mpage_walk:\033[0m\t*pgdir_entryo:%x \tPTE_ADDR(*pgdir_entryp):%x \tKADDR(..):%x \tPTX(va):%x \t *ppte:%x\n", 
 			*pgdir_entryp, 
 			PTE_ADDR(*pgdir_entryp), 
 			KADDR(PTE_ADDR(*pgdir_entryp)),
