@@ -1,6 +1,6 @@
 #ifndef _DBGK_H_
 #define _DBGK_H_
-#define DEBUGK
+//#define DEBUGK
 
 #ifdef DEBUGK
 #define DEBUG_OUTPUT 1
