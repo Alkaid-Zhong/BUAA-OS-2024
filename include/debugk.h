@@ -4,8 +4,8 @@
 #define DEBUGK // 可注释
 
 #ifdef DEBUGK
-#define DEBUGK(fmt, ...) do { printk("debugk::" fmt, ##__VA_ARGS___);} while (0)
+#define DEBUG_OUTPUT 1
 #else
-#define DEBUGK(...)
+#define DEBUG_OUTPUT 0
 #endif
 #endif // !_DBGK_H_
