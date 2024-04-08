@@ -125,6 +125,10 @@ void page_init(void) {
 		LIST_INSERT_HEAD(&page_free_list, &pages[i], pp_link);
 	}
 
+	if (DEBUG_OUTPUT) {
+		printk("\033[32mpage_init:\033[0m\tfreemem:%x\tPADDR(freemem):%x\tPPN(...):%x", freemem, PADDR(freemem), usedPages);
+	}
+
 }
 
 /* Overview:
