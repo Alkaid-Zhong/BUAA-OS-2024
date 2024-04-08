@@ -161,6 +161,10 @@ int page_alloc(struct Page **new) {
 	/* Exercise 2.4: Your code here. (2/2) */
 	memset((void*)page2kva(pp), 0, PAGE_SIZE);
 
+	if (DEBUG_OUTPUT) {
+		printk("\033[32m;page_alloc:\033[0m\tpp:%x\tpage2kva(pp):%x\n", pp, page2kva(pp));
+	}
+
 	*new = pp;
 	return 0;
 }
