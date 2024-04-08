@@ -66,6 +66,10 @@ void *alloc(u_int n, u_int align, int clear) {
 		memset((void *)alloced_mem, 0, n);
 	}
 
+	if (DEBUG_OUTPUT) {
+		printk("\033[32malloc:\033[0m alloced_mem:%x n:%x freemem:%x", alloced_mem, n, freemem);
+	}
+
 	/* Step 5: return allocated chunk. */
 	return (void *)alloced_mem;
 }
