@@ -67,7 +67,7 @@ void *alloc(u_int n, u_int align, int clear) {
 	}
 
 	if (DEBUG_OUTPUT) {
-		printk("\033[32malloc:\033[0m alloced_mem:%x n:%x freemem:%x", alloced_mem, n, freemem);
+		printk("\033[32malloc:\033[0m alloced_mem:%x n:%x freemem:%x\n", alloced_mem, n, freemem);
 	}
 
 	/* Step 5: return allocated chunk. */
