@@ -162,7 +162,7 @@ int page_alloc(struct Page **new) {
 	memset((void*)page2kva(pp), 0, PAGE_SIZE);
 
 	if (DEBUG_OUTPUT) {
-		printk("\033[32m;page_alloc:\033[0m\tpp:%x\tpage2kva(pp):%x\n", pp, page2kva(pp));
+		printk("\033[32mpage_alloc:\033[0m\tpp:%x\tpage2kva(pp):%x\n", pp, page2kva(pp));
 	}
 
 	*new = pp;
