@@ -380,7 +380,7 @@ u_int page_filter(Pde *pgdir, u_int va_lower_limit, u_int va_upper_limit, u_int 
 	u_int va;
 	for(va = va_lower_limit; va < va_upper_limit; va += PAGE_SIZE) {
 		page = page_lookup(pgdir, va, &pte);
-		if (!(*pte & PTE_V)) {
+		if (!(*pte & PTE_V) || page == NULL) {
 			continue;
 		}
 		if (page->pp_ref >= num) {
