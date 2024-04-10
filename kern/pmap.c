@@ -640,7 +640,6 @@ void buddy_free(struct Page *pp, int npp) {
 			LIST_REMOVE(pp_buddy, pp_link);
 			struct Page *newpage = pa2page(pp_pa_8kb);
 			LIST_INSERT_HEAD(&buddy_free_list[1], newpage, pp_link);
-			printk("~~~\n");
 		} else {
 			LIST_INSERT_HEAD(&buddy_free_list[0], pp, pp_link);
 			pp->pp_ref = 0;
