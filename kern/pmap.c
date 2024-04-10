@@ -625,7 +625,7 @@ int buddy_alloc(u_int size, struct Page **new) {
 void buddy_free(struct Page *pp, int npp) {
 	/* Your Code Here (2/2) */
 	u_long pp_pa= page2pa(pp);
-	u_long pp_pa_8kb = page2pa(pp) & 0x1fff;
+	u_long pp_pa_8kb = page2pa(pp) & (~0x1fff);
 	struct Page *pp_buddy;
 	if ((pp_pa & 0x1fff) == 0) {
 		pp_buddy = pa2page(pp_pa) + 1;
