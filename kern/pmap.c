@@ -375,8 +375,6 @@ u_int page_filter(Pde *pgdir, u_int va_lower_limit, u_int va_upper_limit, u_int 
 	struct Page *page;
 	Pte *pte;
 
-	printk("%d %d\n", va_lower_limit, va_upper_limit);
-
 	u_int va;
 	for(va = va_lower_limit; va < va_upper_limit; va += PAGE_SIZE) {
 		page = page_lookup(pgdir, va, &pte);
