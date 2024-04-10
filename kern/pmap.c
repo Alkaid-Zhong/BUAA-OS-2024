@@ -597,6 +597,7 @@ int buddy_alloc(u_int size, struct Page **new) {
 			pp = LIST_FIRST(&buddy_free_list[0]);
 			LIST_REMOVE(pp, pp_link);
 			*new = pp;
+			pp->pp_ref = 1;
 			return 1;
 		} else {
 			if (LIST_EMPTY(&buddy_free_list[1])) {
@@ -606,6 +607,7 @@ int buddy_alloc(u_int size, struct Page **new) {
 			LIST_REMOVE(pp, pp_link);
 			LIST_INSERT_HEAD(&buddy_free_list[0], pp+1, pp_link);
 			*new = pp;
+			pp->pp_ref = 1;
 			return 1;
 		}
 	} else {
@@ -615,6 +617,7 @@ int buddy_alloc(u_int size, struct Page **new) {
 			pp = LIST_FIRST(&buddy_free_list[1]);
 			LIST_REMOVE(pp, pp_link);
 			*new = pp;
+			pp->pp_ref = 1;
 			return 2;
 		}
 	}
@@ -640,8 +643,10 @@ void buddy_free(struct Page *pp, int npp) {
 			printk("~~~\n");
 		} else {
 			LIST_INSERT_HEAD(&buddy_free_list[0], pp, pp_link);
+			pp->pp_ref = 0;
 		}
 	} else {
 		LIST_INSERT_HEAD(&buddy_free_list[1], pp, pp_link);
+		pp->pp_ref = 0;
 	}
 }
