@@ -154,9 +154,9 @@ void env_init(void) {
 
 	/* Exercise 3.1: Your code here. (2/2) */
 	int i;
-	for (i = 0; i < NENV; i++) {
+	for (i = NENV - 1; i >= 0; i--) {
 		envs[i].env_status = ENV_FREE;
-		TAILQ_INSERT_TAIL(&env_free_list, &envs[i], env_link);
+		LIST_INSERT_HEAD(&env_free_list, &envs[i], env_link);
 	}
 
 	/*
