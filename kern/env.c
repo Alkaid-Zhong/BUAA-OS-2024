@@ -257,7 +257,7 @@ int env_alloc(struct Env **new, u_int parent_id) {
 	e->env_runs = 0;	       // for lab6
 	/* Exercise 3.4: Your code here. (3/4) */
 	e->env_id = mkenvid(e);
-	if (asid_alloc(&e->asid) != 0) {
+	if (asid_alloc(&e->env_asid) != 0) {
 		return -E_NO_FREE_ENV;
 	}
 	e->env_parent_id = parent_id;
