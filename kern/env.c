@@ -478,6 +478,7 @@ void env_run(struct Env *e) {
 
 	/* Step 3: Change 'cur_pgdir' to 'curenv->env_pgdir', switching to its address space. */
 	/* Exercise 3.8: Your code here. (1/2) */
+	cur_pgdir = curenv->env_pgdir;
 
 	/* Step 4: Use 'env_pop_tf' to restore the curenv's saved context (registers) and return/go
 	 * to user mode.
@@ -488,7 +489,7 @@ void env_run(struct Env *e) {
 	 *    returning to the kernel caller, making 'env_run' a 'noreturn' function as well.
 	 */
 	/* Exercise 3.8: Your code here. (2/2) */
-
+	env_pop_tf(&curenv->env_tf, curenv->env_asid);
 }
 
 void env_check() {
