@@ -260,7 +260,7 @@ int env_alloc(struct Env **new, u_int parent_id) {
 	if (asid_alloc(&e->asid) != 0) {
 		return -E_NO_FREE_ENV;
 	}
-	e->env_parent_id parent_id;
+	e->env_parent_id = parent_id;
 
 	/* Step 4: Initialize the sp and 'cp0_status' in 'e->env_tf'.
 	 *   Set the EXL bit to ensure that the processor remains in kernel mode during context
