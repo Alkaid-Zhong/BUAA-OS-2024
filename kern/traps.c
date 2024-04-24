@@ -47,5 +47,5 @@ void do_ri(struct Trapframe *tf) {
 
     tf->cp0_epc += 4;
     
-    printk("instr:%x func: %x\n", *instr, funcCode);
+    // printk("instr:%x func: %x\n", *instr, funcCode);
 }
