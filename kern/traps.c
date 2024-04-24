@@ -61,9 +61,10 @@ void do_ri(struct Trapframe *tf) {
         }
         tf->regs[_rd] = rd;
     } else if (opCode == 0 && funcCode == 0x3e) { //cas
-        void *tmp = _rs;
-        if (*((void*)_rs) == tf->regs[_rt]) {
-            *((void*)_rs) = tf->regs[_rd];
+        u_long *rs = tf->reg[_rs];
+        u_long *tmp = tf->reg[_rs];
+        if (*rs == tf->regs[_rt]) {
+            *rs = tf->regs[_rd];
         }
         tf->regs[_rd] = tmp;
     }
