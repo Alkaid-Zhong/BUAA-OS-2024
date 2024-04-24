@@ -14,6 +14,7 @@ void (*exception_handlers[32])(void) = {
     [0 ... 31] = handle_reserved,
     [0] = handle_int,
     [2 ... 3] = handle_tlb,
+    [10] = handle_ri,
 #if !defined(LAB) || LAB >= 4
     [1] = handle_mod,
     [8] = handle_sys,
