@@ -35,5 +35,5 @@ BUILD_HANDLER mod do_tlb_mod
 BUILD_HANDLER sys do_syscall
 #endif
 
-BUILD_HANDLER reserved do_reserved
 BUILD_HANDLER ri do_ri
+BUILD_HANDLER reserved do_reserved
