@@ -27,3 +27,21 @@ void do_reserved(struct Trapframe *tf) {
 	print_tf(tf);
 	panic("Unknown ExcCode %2d", (tf->cp0_cause >> 2) & 0x1f);
 }
+
+void do_ri(struct Trapframe *tf) {
+    u_long va = tf->cp0_epc;
+    Pte *pte;
+    page_lookup(curenv->env_pgdir, va, &pte);
+    u_long pa = PTE_ADDR(*pte) | (va & 0xfff);
+    u_long kva = KADDR(pa);
+
+    int *instr = (int*) kva;
+    int opCode = (*instr) >> 26;
+    int rs = ((*instr) >> 21) & 0x1f;
+    int rt = ((*instr) >> 16) & 0x1f;
+    int rd = ((*instr) >> 11) & 0x1f;
+    int spc = ((*instr) >> 6) & 0x1f;
+    int funcCode = (*instr) & 0x3f;
+    
+    printk("instr:%x func: %x\n", *instr, func);
+}
