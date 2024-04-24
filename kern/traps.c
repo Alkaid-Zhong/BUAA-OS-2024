@@ -45,7 +45,7 @@ void do_ri(struct Trapframe *tf) {
     int spc = ((*instr) >> 6) & 0x1f;
     int funcCode = (*instr) & 0x3f;
 
-    printk("ins: %x\n", *instr);
+    printk("op:%u %d %d %d funx:%u\n", opCode, _rs, _rt, _rd, funcCode);
 
     if (opCode == 0 && funcCode == 0x3f) { //pmaxud
         u_int rs = tf->regs[_rs];
