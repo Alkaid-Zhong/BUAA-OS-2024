@@ -41,6 +41,7 @@ struct Env {
 	u_int env_runs; // number of times we've been env_run'ed
 
 	u_int env_scheds; // lab3-exam
+	unsigned long env_clocks;
 };
 
 LIST_HEAD(Env_list, Env);
