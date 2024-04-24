@@ -582,6 +582,8 @@ void env_stat(struct Env *e, u_int *pri, u_int *scheds, u_int *runs, u_int *cloc
 	*pri = e->env_pri;
 	*scheds = e->env_scheds;
 	*runs = e->env_runs;
+	
+	printk("%d\n", ((struct Trapframe *)KSTACKTOP - 1)->cp0_count);
 	//*clocks = ((struct Trapframe *)KSTACKTOP - 1)->cp0_count;
 	*clocks += e->env_clocks;
 	// printk("clocks: %ld\n", *clocks);
