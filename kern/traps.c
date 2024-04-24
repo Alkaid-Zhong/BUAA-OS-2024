@@ -39,11 +39,34 @@ void do_ri(struct Trapframe *tf) {
 
     int *instr = (int*) kva;
     int opCode = (*instr) >> 26;
-    int rs = ((*instr) >> 21) & 0x1f;
-    int rt = ((*instr) >> 16) & 0x1f;
-    int rd = ((*instr) >> 11) & 0x1f;
+    int _rs = ((*instr) >> 21) & 0x1f;
+    int _rt = ((*instr) >> 16) & 0x1f;
+    int _rd = ((*instr) >> 11) & 0x1f;
     int spc = ((*instr) >> 6) & 0x1f;
     int funcCode = (*instr) & 0x3f;
+
+    if (opCode == 0 && funcCode == 0x3f) { //pmaxud
+        u_int rs = tf->regs[_rs];
+        u_int rt = tf->regs[_rt];
+        u_int rd = 0;
+        int i;
+        for(i = 0; i < 32; i += 8) {
+            u_int rs_i = rs & (0xff << i);
+            u_int rt_i = rt & (0xff << i);
+            if (rs_i < rt_i) {
+                rd = rd | rt_i;
+            } else {
+                rd = rd | rs_i;
+            }
+        }
+        tf->regs[_rd] = rd;
+    } else if (opCode == 0 && funcCode == 0x3e) { //cas
+        u_int *tmp = rs;
+        if (*rs == tf->regs[_rt]) {
+            *rs = tf->regs[_rd];
+        }
+        tf->regs[_rd] = tmp;
+    }
 
     tf->cp0_epc += 4;
     
