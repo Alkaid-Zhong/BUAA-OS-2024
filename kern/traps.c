@@ -45,8 +45,6 @@ void do_ri(struct Trapframe *tf) {
     int spc = ((*instr) >> 6) & 0x1f;
     int funcCode = (*instr) & 0x3f;
 
-    printk("op:%u %d %d %d funx:%u\n", opCode, _rs, _rt, _rd, funcCode);
-
     if (opCode == 0 && funcCode == 0x3f) { //pmaxud
         u_int rs = tf->regs[_rs];
         u_int rt = tf->regs[_rt];
@@ -64,7 +62,7 @@ void do_ri(struct Trapframe *tf) {
         tf->regs[_rd] = rd;
     } else if (opCode == 0 && funcCode == 0x3e) { //cas
         u_long *rs = tf->regs[_rs];
-        u_long *tmp = tf->regs[_rs];
+        u_long *tmp = rs;
         if (*rs == tf->regs[_rt]) {
             *rs = tf->regs[_rd];
         }
