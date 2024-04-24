@@ -587,6 +587,6 @@ void env_stat(struct Env *e, u_int *pri, u_int *scheds, u_int *runs, u_int *cloc
 		e->env_clocks = 0;
 	}
 	
-	*clocks += e->env_clocks;
+	*clocks = e->env_clocks;
 	// printk("clocks: %ld\n", *clocks);
 }
