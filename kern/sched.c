@@ -38,6 +38,10 @@ void schedule(int yield) {
 	count--;
 	if ((yield != 0) || (count == 0) || (e == NULL) || (e->env_status != ENV_RUNNABLE)) {
 		if (e != NULL && e->env_status == ENV_RUNNABLE) {
+			/*
+			lab3-exam
+			*/
+			e->env_runs++;
 			TAILQ_REMOVE(&env_sched_list, e, env_sched_link);
 			TAILQ_INSERT_TAIL(&env_sched_list, e, env_sched_link);
 		}

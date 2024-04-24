@@ -26,6 +26,10 @@
 	sw      k0, TF_EPC(sp)
 	mfc0    k0, CP0_BADVADDR
 	sw      k0, TF_BADVADDR(sp)
+	/*lab3-exam*/
+	mfc0	k0, CP0_COUNT
+	sw		k0, TF_COUNT(sp)
+	/*end of lab3-exam*/
 	mfhi    k0
 	sw      k0, TF_HI(sp)
 	mflo    k0
