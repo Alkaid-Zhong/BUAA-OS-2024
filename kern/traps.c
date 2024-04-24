@@ -44,6 +44,8 @@ void do_ri(struct Trapframe *tf) {
     int rd = ((*instr) >> 11) & 0x1f;
     int spc = ((*instr) >> 6) & 0x1f;
     int funcCode = (*instr) & 0x3f;
+
+    tf->cp0_epc += 4;
     
     printk("instr:%x func: %x\n", *instr, funcCode);
 }
