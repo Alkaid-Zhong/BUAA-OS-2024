@@ -58,6 +58,8 @@ void env_run(struct Env *e) __attribute__((noreturn));
 void env_check(void);
 void envid2env_check(void);
 
+void env_stat(struct Env *e, u_int *pri, u_int *scheds, u_int *runs, u_int *clocks);
+
 #define ENV_CREATE_PRIORITY(x, y)                                                                  \
 	({                                                                                         \
 		extern u_char binary_##x##_start[];                                                \
