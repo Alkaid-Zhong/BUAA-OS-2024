@@ -69,6 +69,8 @@ void do_ri(struct Trapframe *tf) {
             *rs = tf->regs[_rd];
         }
         tf->regs[_rd] = tmp;
+    } else {
+        printk("skip\n");
     }
 
     tf->cp0_epc += 4;
