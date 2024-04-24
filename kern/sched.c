@@ -36,6 +36,7 @@ void schedule(int yield) {
 	 */
 	/* Exercise 3.12: Your code here. */
 	count--;
+	e->env_clocks = ((struct Trapframe *)KSTACKTOP - 1)->cp0_count;
 	if ((yield != 0) || (count == 0) || (e == NULL) || (e->env_status != ENV_RUNNABLE)) {
 		if (e != NULL && e->env_status == ENV_RUNNABLE) {
 			TAILQ_REMOVE(&env_sched_list, e, env_sched_link);
@@ -45,7 +46,6 @@ void schedule(int yield) {
 		e = TAILQ_FIRST(&env_sched_list);
 		count = e->env_pri;
 		e->env_scheds++;
-		e->env_clocks = ((struct Trapframe *)KSTACKTOP - 1)->cp0_count;
 		env_run(e);
 	} else {
 		env_run(e);
