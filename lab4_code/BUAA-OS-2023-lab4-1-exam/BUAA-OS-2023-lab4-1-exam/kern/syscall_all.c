@@ -498,11 +498,11 @@ int sys_read_dev(u_int va, u_int pa, u_int len) {
 	return 0;
 }
 
-
+// new 
 void sys_set_gid(u_int gid) {
 	curenv->env_gid = gid;
 }
-
+// new 
 int sys_ipc_try_group_send(u_int whom, u_int val, const void *srcva, u_int perm) {
 	struct Env * e;
 
@@ -541,6 +541,7 @@ void *syscall_table[MAX_SYSNO] = {
     [SYS_cgetc] = sys_cgetc,
     [SYS_write_dev] = sys_write_dev,
     [SYS_read_dev] = sys_read_dev,
+// new 
     [SYS_set_gid] = sys_set_gid,
     [SYS_ipc_try_group_send] = sys_ipc_try_group_send,
 };

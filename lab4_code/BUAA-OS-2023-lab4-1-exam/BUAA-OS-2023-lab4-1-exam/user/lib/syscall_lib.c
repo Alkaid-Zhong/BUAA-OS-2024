@@ -75,7 +75,7 @@ int syscall_read_dev(void *va, u_int dev, u_int len) {
 
 }
 
-
+// new 
 void syscall_set_gid(u_int gid) {
 	msyscall(SYS_set_gid, gid);
 }
