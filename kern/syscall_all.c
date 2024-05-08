@@ -5,7 +5,7 @@
 #include <printk.h>
 #include <sched.h>
 #include <syscall.h>
-#include <msg.c>
+#include <msg.h>
 
 extern struct Env *curenv;
 
