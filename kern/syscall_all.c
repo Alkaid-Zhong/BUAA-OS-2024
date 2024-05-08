@@ -539,6 +539,7 @@ int sys_msg_send(u_int envid, u_int value, u_int srcva, u_int perm) {
 	} else {
 		p = page_lookup(curenv->env_pgdir, srcva, NULL);
 		p->pp_ref++;
+		try(page_insert(curenv->env_pgdir, curenv->env_asid, p, curenv->env_ipc_dstva, m->msg_perm));
 	}
 	m->msg_page = p;
 
@@ -564,7 +565,7 @@ int sys_msg_recv(u_int dstva) {
 
 	p = m->msg_page;
 	if (dstva != 0 && p != NULL) {
-		try(page_insert(curenv->env_pgdir, curenv->env_asid, p, curenv->env_ipc_dstva, m->msg_perm));
+		//try(page_insert(curenv->env_pgdir, curenv->env_asid, p, curenv->env_ipc_dstva, m->msg_perm));
 		p->pp_ref--;
 	}
 
