@@ -565,7 +565,7 @@ int sys_msg_recv(u_int dstva) {
 
 	p = m->msg_page;
 	if (dstva != 0 && p != NULL) {
-		//try(page_insert(curenv->env_pgdir, curenv->env_asid, p, curenv->env_ipc_dstva, m->msg_perm));
+		try(page_insert(curenv->env_pgdir, curenv->env_asid, p, curenv->env_ipc_dstva, m->msg_perm));
 		p->pp_ref--;
 	}
 
