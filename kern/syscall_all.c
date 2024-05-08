@@ -545,6 +545,7 @@ int sys_msg_send(u_int envid, u_int value, u_int srcva, u_int perm) {
 
 	TAILQ_INSERT_TAIL(&e->env_msg_list, m, msg_link);
 
+	//printk("msgid: %d\n", msg2id(m));
 	return msg2id(m);
 }
 
