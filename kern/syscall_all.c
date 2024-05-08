@@ -556,7 +556,7 @@ int sys_msg_recv(u_int dstva) {
 
 	/* Your Code Here (2/3) */
 
-	m = TAILQ_FIRST(&msg_free_list);
+	m = TAILQ_FIRST(&curenv->env_msg_list);
 
 	p = m->msg_page;
 	if (dstva != 0) {
@@ -569,7 +569,7 @@ int sys_msg_recv(u_int dstva) {
 	curenv->env_msg_perm = m->msg_perm;
 	
 	m->msg_status = MSG_RECV;
-	TAILQ_REMOVE(&msg_free_list, m, msg_link);
+	TAILQ_REMOVE(&curenv->env_msg_list, m, msg_link);
 	TAILQ_INSERT_TAIL(&msg_free_list, m, msg_link);
 
 	return 0;
