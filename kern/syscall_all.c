@@ -541,7 +541,7 @@ int sys_msg_send(u_int envid, u_int value, u_int srcva, u_int perm) {
 
 	TAILQ_INSERT_TAIL(&e->env_msg_list, m, msg_link);
 
-	debuf("send\n");
+	debugf("send\n");
 	return msg2id(m);
 }
 
@@ -574,7 +574,7 @@ int sys_msg_recv(u_int dstva) {
 	TAILQ_REMOVE(&msg_free_list, m, msg_link);
 	TAILQ_INSERT_TAIL(&msg_free_list, m, msg_link);
 
-	debuf("recv\n");
+	debugf("recv\n");
 	return 0;
 }
 extern struct Msg msgs[NMSG];
