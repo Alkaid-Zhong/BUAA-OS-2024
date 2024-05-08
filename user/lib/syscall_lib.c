@@ -78,7 +78,7 @@ int syscall_read_dev(void *va, u_int dev, u_int size) {
 // lab4-1-exam
 void syscall_sem_open(int sem_id, int n) {
 	// Lab 4-1-Exam: Your code here. (2/9)
-	return msyscall(SYS_sem_open, sem_id, n);
+	msyscall(SYS_sem_open, sem_id, n);
 }
 
 int syscall_sem_wait(int sem_id) {
