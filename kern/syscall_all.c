@@ -511,6 +511,43 @@ int sys_read_dev(u_int va, u_int pa, u_int len) {
 	return 0;
 }
 
+// lab4-1-extra
+int sys_msg_send(u_int envid, u_int value, u_int srcva, u_int perm) {
+	struct Env *e;
+	struct Page *p;
+	struct Msg *m;
+
+	if (srcva != 0 && is_illegal_va(srcva)) {
+		return -E_INVAL;
+	}
+	try(envid2env(envid, &e, 0));
+	if (TAILQ_EMPTY(&msg_free_list)) {
+		return -E_NO_MSG;
+	}
+
+	/* Your Code Here (1/3) */
+}
+
+int sys_msg_recv(u_int dstva) {
+	struct Msg *m;
+	struct Page *p;
+
+	if (dstva != 0 && is_illegal_va(dstva)) {
+		return -E_INVAL;
+	}
+	if (TAILQ_EMPTY(&curenv->env_msg_list)) {
+		return -E_NO_MSG;
+	}
+
+	/* Your Code Here (2/3) */
+}
+
+int sys_msg_status(u_int msgid) {
+	struct Msg *m;
+
+	/* Your Code Here (3/3) */
+}
+
 void *syscall_table[MAX_SYSNO] = {
     [SYS_putchar] = sys_putchar,
     [SYS_print_cons] = sys_print_cons,
@@ -530,6 +567,9 @@ void *syscall_table[MAX_SYSNO] = {
     [SYS_cgetc] = sys_cgetc,
     [SYS_write_dev] = sys_write_dev,
     [SYS_read_dev] = sys_read_dev,
+	[SYS_msg_send] = sys_msg_send,
+	[SYS_msg_recv] = sys_msg_recv,
+	[SYS_msg_status] = sys_msg_status,
 };
 
 /* Overview:
