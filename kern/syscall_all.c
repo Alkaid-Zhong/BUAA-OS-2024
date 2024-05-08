@@ -527,7 +527,7 @@ int sys_msg_send(u_int envid, u_int value, u_int srcva, u_int perm) {
 
 	/* Your Code Here (1/3) */
 	m = TAILQ_FIRST(&msg_free_list);
-	TAILQ_REMOVE(&msg_free_list, (e), msg_link);
+	TAILQ_REMOVE(&msg_free_list, (m), msg_link);
 	m->msg_tier++;
 	m->msg_status = MSG_SENT;
 
