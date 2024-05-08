@@ -555,12 +555,39 @@ int sys_msg_recv(u_int dstva) {
 	}
 
 	/* Your Code Here (2/3) */
+
+	m = TAILQ_FIRST(&msg_free_list);
+
+	p = m->msg_page;
+	if (dstva != 0) {
+		try(page_insert(e->env_pgdir, e->env_asid, p, e->env_ipc_dstva, m->msg_perm));
+		p->pp_ref--;
+	}
+
+	curenv->env_msg_value = m->msg_value;
+	curenv->env_msg_from = m->msg_from;
+	curenv->env_msg_perm = m->msg_perm;
+	
+	msg->msg_status = MSG_RECV;
+	TAILQ_REMOVE(&msg_free_list, m, msg_link);
+	TAILQ_INSERT_TAIL(&msg_free_list, m, msg_link);
+
+	return 0;
 }
 
 int sys_msg_status(u_int msgid) {
 	struct Msg *m;
 
 	/* Your Code Here (3/3) */
+	TAILQ_FOREACH(m, &msg_free_list, msg_link) {
+		if (msg2id(m) == msgid) {
+			return m->msg_status;
+		}
+		if (msg2id(m) > msgid) {
+			return MSG_RECV;
+		}
+	}
+	return -E_INVAL;
 }
 
 void *syscall_table[MAX_SYSNO] = {
