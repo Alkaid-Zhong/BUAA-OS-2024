@@ -552,6 +552,10 @@ void *syscall_table[MAX_SYSNO] = {
     [SYS_cgetc] = sys_cgetc,
     [SYS_write_dev] = sys_write_dev,
     [SYS_read_dev] = sys_read_dev,
+	[SYS_sem_open] = sys_sem_open,
+	[SYS_sem_wait] = sys_sem_wait,
+	[SYS_sem_post] = sys_sem_post,
+	[SYS_sem_kill] = sys_sem_kill,
 };
 
 /* Overview:
