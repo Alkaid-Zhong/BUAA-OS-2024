@@ -574,7 +574,7 @@ int sys_msg_recv(u_int dstva) {
 
 	return 0;
 }
-
+extern struct Msg msgs[NMSG];
 int sys_msg_status(u_int msgid) {
 	struct Msg *m;
 
