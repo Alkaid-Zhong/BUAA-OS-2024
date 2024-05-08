@@ -511,7 +511,6 @@ int sys_read_dev(u_int va, u_int pa, u_int len) {
 
 	return 0;
 }
-
 // lab4-1-extra
 int sys_msg_send(u_int envid, u_int value, u_int srcva, u_int perm) {
 	struct Env *e;
@@ -541,7 +540,6 @@ int sys_msg_send(u_int envid, u_int value, u_int srcva, u_int perm) {
 
 	TAILQ_INSERT_TAIL(&e->env_msg_list, m, msg_link);
 
-	debugf("send\n");
 	return msg2id(m);
 }
 
@@ -574,7 +572,6 @@ int sys_msg_recv(u_int dstva) {
 	TAILQ_REMOVE(&msg_free_list, m, msg_link);
 	TAILQ_INSERT_TAIL(&msg_free_list, m, msg_link);
 
-	debugf("recv\n");
 	return 0;
 }
 extern struct Msg msgs[NMSG];
