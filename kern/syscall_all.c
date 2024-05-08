@@ -527,6 +527,7 @@ int sys_msg_send(u_int envid, u_int value, u_int srcva, u_int perm) {
 
 	/* Your Code Here (1/3) */
 	m = TAILQ_FIRST(&msg_free_list);
+	TAILQ_REMOVE(&msg_free_list, (e), msg_link);
 	m->msg_tier++;
 	m->msg_status = MSG_SENT;
 
@@ -542,7 +543,6 @@ int sys_msg_send(u_int envid, u_int value, u_int srcva, u_int perm) {
 		// try(page_insert(e->env_pgdir, e->env_asid, p, e->env_ipc_dstva, m->msg_perm));
 	}
 	m->msg_page = p;
-
 	TAILQ_INSERT_TAIL(&e->env_msg_list, m, msg_link);
 
 	//printk("msgid: %d\n", msg2id(m));
