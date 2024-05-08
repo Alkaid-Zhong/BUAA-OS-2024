@@ -511,6 +511,28 @@ int sys_read_dev(u_int va, u_int pa, u_int len) {
 	return 0;
 }
 
+// lab4-1-exam
+int sems[15];
+int sems_valid[15] = {0};
+
+void sys_sem_open(int sem_id, int n) {
+	// Lab 4-1-Exam: Your code here. (6/9)
+}
+
+int sys_sem_wait(int sem_id) {
+	// Lab 4-1-Exam: Your code here. (7/9)
+}
+
+int sys_sem_post(int sem_id) {
+	// Lab 4-1-Exam: Your code here. (8/9)
+}
+
+int sys_sem_kill(int sem_id) {
+	// Lab 4-1-Exam: Your code here. (9/9)
+}
+//
+
+
 void *syscall_table[MAX_SYSNO] = {
     [SYS_putchar] = sys_putchar,
     [SYS_print_cons] = sys_print_cons,
