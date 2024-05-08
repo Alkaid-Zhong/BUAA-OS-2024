@@ -22,6 +22,10 @@ enum {
 	SYS_cgetc,
 	SYS_write_dev,
 	SYS_read_dev,
+	//lab4-1-extra
+	SYS_msg_send,
+	SYS_msg_recv,
+	SYS_msg_status,
 	MAX_SYSNO,
 };
 
