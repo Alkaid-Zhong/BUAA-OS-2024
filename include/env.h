@@ -5,6 +5,7 @@
 #include <queue.h>
 #include <trap.h>
 #include <types.h>
+#include <msg.h>
 
 #define LOG2NENV 10
 #define NENV (1 << LOG2NENV)
