@@ -526,6 +526,21 @@ int sys_msg_send(u_int envid, u_int value, u_int srcva, u_int perm) {
 	}
 
 	/* Your Code Here (1/3) */
+	m = TAILQ_FIRST(&msg_free_list);
+	m->msg_tier++;
+	m->msg_status = MSG_SENT;
+
+	m->msg_value = value;
+	m->msg_from = cur_pgdir->env_id;
+	m->msg_perm = perm | PTE_V;
+
+	p = page_lookup(curenv->env_pgdir, srcva, NULL);
+	p->pp_ref++;
+	m->msg_page = p;
+
+	TAILQ_INSERT_TAIL(&e->env_msg_list, msg, msg_link);
+
+	return msg2id(msg);
 }
 
 int sys_msg_recv(u_int dstva) {
