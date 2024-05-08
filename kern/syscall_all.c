@@ -517,7 +517,7 @@ int sems_valid[15] = {0};
 
 void sys_sem_open(int sem_id, int n) {
 	// Lab 4-1-Exam: Your code here. (6/9)
-	if (sems_valid[sam_id]) {
+	if (sems_valid[sem_id]) {
 		return;
 	}
 	sems[sem_id] = n;
