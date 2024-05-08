@@ -283,6 +283,9 @@ int env_alloc(struct Env **new, u_int parent_id) {
 	/* Exercise 3.4: Your code here. (4/4) */
 	LIST_REMOVE(e, env_link);
 
+	//lab4-1-extra
+	TAILQ_INIT(&e->env_msg_list);
+
 	*new = e;
 	return 0;
 }
