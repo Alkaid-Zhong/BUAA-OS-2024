@@ -69,6 +69,14 @@ int syscall_cgetc(void);
 int syscall_write_dev(void *va, u_int dev, u_int len);
 int syscall_read_dev(void *va, u_int dev, u_int len);
 
+// lab4-1-exam
+void syscall_sem_open(int sem_id, int n);
+int syscall_sem_wait(int sem_id);
+int syscall_sem_post(int sem_id);
+int syscall_sem_kill(int sem_id);
+//
+
+
 // ipc.c
 void ipc_send(u_int whom, u_int val, const void *srcva, u_int perm);
 u_int ipc_recv(u_int *whom, void *dstva, u_int *perm);
