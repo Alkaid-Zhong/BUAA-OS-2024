@@ -13,7 +13,7 @@ int block_is_free(u_int);
 // Hint: Use 'DISKMAP' and 'BLOCK_SIZE' to calculate the address.
 void *disk_addr(u_int blockno) {
 	/* Exercise 5.6: Your code here. */
-
+	return DISKMAP + blockno * BLOCK_SIZE;
 }
 
 // Overview:
