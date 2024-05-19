@@ -216,7 +216,7 @@ struct File *create_file(struct File *dirf) {
 		// the 'bno' at the index.
 		/* Exercise 5.5: Your code here. (1/3) */
 		if (i < NDIRECT) {
-			bno = dirf->direct[i];
+			bno = dirf->f_direct[i];
 		} else {
 			bno = ((uint32_t*)(disk[dirf->f_indirect].data))[i];
 		}
@@ -229,7 +229,7 @@ struct File *create_file(struct File *dirf) {
 			// If the first byte of the file name is null, the 'File' is unused.
 			// Return a pointer to the unused 'File'.
 			/* Exercise 5.5: Your code here. (2/3) */
-			if (f->f_name[0] == NULL) {
+			if (f->f_name == NULL) {
 				return f;
 			}
 		}
