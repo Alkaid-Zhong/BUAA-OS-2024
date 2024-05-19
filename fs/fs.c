@@ -166,7 +166,7 @@ void unmap_block(u_int blockno) {
 
 	// Step 3: Unmap the virtual address via syscall.
 	/* Exercise 5.7: Your code here. (5/5) */
-	try(syscall_mem_unmap(env->env_id, disk_addr(blockno)));
+	syscall_mem_unmap(env->env_id, disk_addr(blockno));
 
 	user_assert(!block_is_mapped(blockno));
 }
@@ -499,7 +499,7 @@ int dir_lookup(struct File *dir, char *name, struct File **file) {
 	// Step 1: Calculate the number of blocks in 'dir' via its size.
 	u_int nblock;
 	/* Exercise 5.8: Your code here. (1/3) */
-	nblock = f->f_size / BLOCK_SIZE;
+	nblock = dir->f_size / BLOCK_SIZE;
 
 	// Step 2: Iterate through all blocks in the directory.
 	for (int i = 0; i < nblock; i++) {
