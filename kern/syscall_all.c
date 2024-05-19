@@ -492,8 +492,8 @@ int sys_write_dev(u_int va, u_int pa, u_int len) {
 	if (len != 1 && len != 2 && len != 4) {
 		return -E_INVAL;
 	}
-	if ((0x180003f8 <= pa && pa + len < 0x18000418) || 
-		(0x180001f0 <= pa && pa + len < 0x180001F8)) {
+	if ((0x180003f8 <= pa && pa + len <= 0x18000418) || 
+		(0x180001f0 <= pa && pa + len <= 0x180001F8)) {
 		memcpy((void*)(KSEG1 | pa), (void*)va, len);
 	} else {
 		return -E_INVAL;
@@ -524,8 +524,8 @@ int sys_read_dev(u_int va, u_int pa, u_int len) {
 	if (len != 1 && len != 2 && len != 4) {
 		return -E_INVAL;
 	}
-	if ((0x180003f8 <= pa && pa + len < 0x18000418) || 
-		(0x180001f0 <= pa && pa + len < 0x180001F8)) {
+	if ((0x180003f8 <= pa && pa + len <= 0x18000418) || 
+		(0x180001f0 <= pa && pa + len <= 0x180001F8)) {
 		memcpy((void*)va, (void*)(KSEG1 | pa), len);
 	} else {
 		return -E_INVAL;
