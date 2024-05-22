@@ -18,6 +18,7 @@ void strace_send(int sysno) {
 	}
 
 	// Your code here. (1/2)
+	debugf("send\n");
 
 	if (straced != 0) {
 		u_int cur_env_id = syscall_getenvid();
