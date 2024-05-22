@@ -19,7 +19,7 @@ void strace_send(int sysno) {
 
 	// Your code here. (1/2)
 	u_int cur_env_id = syscall_getenvid();
-	struct Env *curenv = envs[ENVX(cur_env_id)];
+	struct Env *curenv = &envs[ENVX(cur_env_id)];
 
 	if (straced != 0) {
 		int r = straced;
@@ -33,7 +33,7 @@ void strace_send(int sysno) {
 void strace_recv() {
 	// Your code here. (2/2)
 	u_int cur_env_id = syscall_getenvid();
-	struct Env *curenv = envs[ENVX(cur_env_id)];
+	struct Env *curenv = &envs[ENVX(cur_env_id)];
 
 	while(1) {
 		syscall_ipc_recv(0);
