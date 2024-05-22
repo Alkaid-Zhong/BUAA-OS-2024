@@ -9,7 +9,6 @@ void strace_barrier(u_int env_id) {
 	straced = straced_bak;
 }
 
-extern struct Env *curenv;
 
 void strace_send(int sysno) {
 	if (!((SYS_putchar <= sysno && sysno <= SYS_set_tlb_mod_entry) ||
@@ -19,6 +18,9 @@ void strace_send(int sysno) {
 	}
 
 	// Your code here. (1/2)
+	u_int cur_env_id = syscall_getenvid();
+	struct Env *curenv = envs[ENVX(cur_env_id)];
+
 	if (straced != 0) {
 		int r = straced;
 		straced = 0;
@@ -30,6 +32,9 @@ void strace_send(int sysno) {
 
 void strace_recv() {
 	// Your code here. (2/2)
+	u_int cur_env_id = syscall_getenvid();
+	struct Env *curenv = envs[ENVX(cur_env_id)];
+
 	while(1) {
 		syscall_ipc_recv(0);
 		u_int sysno = curenv->env_ipc_value;
