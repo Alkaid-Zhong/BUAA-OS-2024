@@ -25,7 +25,7 @@ void strace_send(int sysno) {
 		struct Env cur_env = envs[ENVX(cur_env_id)];
 		int r = straced;
 		syscall_ipc_try_send(cur_env.env_parent_id, sysno, 0, 0);
-		syscall_set_env_status(cur_env.env_id, ENV_NOT_RUNNABLE);
+		syscall_set_env_status(0, ENV_NOT_RUNNABLE);
 		straced = r;
 	}
 }
