@@ -37,7 +37,7 @@ void strace_recv() {
 		u_int child_env_id = curenv->env_ipc_from;
 		strace_barrier(child_env_id);
 		recv_sysno(child_env_id, sysno);
-		envs[ENVX(child_env_id)].env_status == ENV_RUNNABLE;
+		syscall_set_env_status(child_env_id, ENV_RUNNABLE);
 	}
 
 }
