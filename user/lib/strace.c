@@ -9,6 +9,8 @@ void strace_barrier(u_int env_id) {
 	straced = straced_bak;
 }
 
+extern struct Env *curenv;
+
 void strace_send(int sysno) {
 	if (!((SYS_putchar <= sysno && sysno <= SYS_set_tlb_mod_entry) ||
 	      (SYS_exofork <= sysno && sysno <= SYS_panic)) ||
