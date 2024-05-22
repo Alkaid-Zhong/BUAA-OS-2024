@@ -24,6 +24,7 @@ void strace_send(int sysno) {
 		straced = 0;
 		while(syscall_ipc_try_send(env->env_parent_id, sysno, 0, 0));
 		syscall_set_env_status(env->env_id, ENV_NOT_RUNNABLE);
+		syscall_yield();
 		straced = r;
 	}
 }
