@@ -32,10 +32,10 @@ void strace_send(int sysno) {
 }
 
 void strace_recv() {
-	return;
 	// Your code here. (2/2)
 	u_int cur_env_id = syscall_getenvid();
 	struct Env cur_env = envs[ENVX(cur_env_id)];
+	return;
 
 	while(1) {
 		syscall_ipc_recv(0);
