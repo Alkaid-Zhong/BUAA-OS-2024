@@ -16,11 +16,12 @@ void strace_send(int sysno) {
 	    sysno == SYS_set_trapframe) {
 		return;
 	}
-	return;
 
 	// Your code here. (1/2)
 	u_int cur_env_id = syscall_getenvid();
 	struct Env *curenv = &envs[ENVX(cur_env_id)];
+
+	debugf("env_id:%d\n", cur_env_id);
 
 	if (straced != 0) {
 		int r = straced;
