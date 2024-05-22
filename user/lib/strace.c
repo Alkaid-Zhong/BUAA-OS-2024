@@ -19,7 +19,7 @@ void strace_send(int sysno) {
 
 	// Your code here. (1/2)
 	
-
+	return;
 	if (straced != 0) {
 		u_int cur_env_id = syscall_getenvid();
 		struct Env cur_env = envs[ENVX(cur_env_id)];
@@ -32,6 +32,7 @@ void strace_send(int sysno) {
 }
 
 void strace_recv() {
+	return;
 	// Your code here. (2/2)
 	u_int cur_env_id = syscall_getenvid();
 	struct Env cur_env = envs[ENVX(cur_env_id)];
