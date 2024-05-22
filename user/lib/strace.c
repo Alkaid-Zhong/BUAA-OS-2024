@@ -22,23 +22,19 @@ void strace_send(int sysno) {
 	if (straced != 0) {
 		int r = straced;
 		straced = 0;
-		u_int cur_env_id = syscall_getenvid();
-		struct Env cur_env = envs[ENVX(cur_env_id)];
-		syscall_ipc_try_send(cur_env.env_parent_id, sysno, 0, 0);
-		syscall_set_env_status(cur_env.env_id, ENV_NOT_RUNNABLE);
+		syscall_ipc_try_send(env.env_parent_id, sysno, 0, 0);
+		syscall_set_env_status(env.env_id, ENV_NOT_RUNNABLE);
 		straced = r;
 	}
 }
 
 void strace_recv() {
 	// Your code here. (2/2)
-
+	
 	while(1) {
-		u_int cur_env_id = syscall_getenvid();
-		struct Env cur_env = envs[ENVX(cur_env_id)];
 		syscall_ipc_recv(0);
-		u_int sysno = cur_env.env_ipc_value;
-		u_int child_env_id = cur_env.env_ipc_from;
+		u_int sysno = env.env_ipc_value;
+		u_int child_env_id = env.env_ipc_from;
 		strace_barrier(child_env_id);
 		recv_sysno(child_env_id, sysno);
 		syscall_set_env_status(child_env_id, ENV_RUNNABLE);
