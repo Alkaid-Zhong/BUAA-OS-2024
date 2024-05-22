@@ -18,6 +18,7 @@ void strace_send(int sysno) {
 	}
 
 	// Your code here. (1/2)
+	debugf("try get env id\n");
 	u_int cur_env_id = syscall_getenvid();
 	struct Env *curenv = &envs[ENVX(cur_env_id)];
 
