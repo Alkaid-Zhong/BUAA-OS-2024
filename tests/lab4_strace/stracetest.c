@@ -59,6 +59,7 @@ void print_answer() {
 
 int main() {
 	if (fork()) {
+		debugf("parent\n");
 		strace_recv();
 		int child_ans[3] = {0x1001, 0x1001, 0x1001};
 		int sysno_ans[3] = {2, 1, 4};
@@ -66,6 +67,7 @@ int main() {
 		greedy_check(3, child_ans, sysno_ans);
 		debugf("strace test passed!\n");
 	} else {
+		debugf("child\n");
 		straced = 1;
 		debugf("Hi, this is 0x%x!\n", syscall_getenvid());
 	}
