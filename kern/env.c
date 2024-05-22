@@ -94,7 +94,7 @@ u_int mkenvid(struct Env *e) {
 
 /* Overview:
  *   Convert an existing 'envid' to an 'struct Env *'.
- *   If 'envid' is 0, set '*penv = curenv', otherwise set '*penv = &envs[ENVX(envid)]'.
+ *   If 'envid' is 0, set '*penv = curenv', otherwise set '*penv = c'.
  *   In addition, if 'checkperm' is non-zero, the requested env must be either 'curenv' or its
  *   immediate child.
  *
@@ -268,6 +268,57 @@ int env_alloc(struct Env **new, u_int parent_id) {
 	if (asid_alloc(&e->env_asid) != 0) {
 		return -E_NO_FREE_ENV;
 	}
+	e->env_parent_id = parent_id;
+
+	/* Step 4: Initialize the sp and 'cp0_status' in 'e->env_tf'.
+	 *   Set the EXL bit to ensure that the processor remains in kernel mode during context
+	 * recovery. Additionally, set UM to 1 so that when ERET unsets EXL, the processor
+	 * transitions to user mode.
+	 */
+	e->env_tf.cp0_status = STATUS_IM7 | STATUS_IE | STATUS_EXL | STATUS_UM;
+	// Reserve space for 'argc' and 'argv'.
+	e->env_tf.regs[29] = USTACKTOP - sizeof(int) - sizeof(char **);
+
+	/* Step 5: Remove the new Env from env_free_list. */
+	/* Exercise 3.4: Your code here. (4/4) */
+	LIST_REMOVE(e, env_link);
+
+	*new = e;
+	return 0;
+}
+int env_clone(struct Env **new, u_int parent_id) {
+	int r;
+	struct Env *e;
+
+	/* Step 1: Get a free Env from 'env_free_list' */
+	/* Exercise 3.4: Your code here. (1/4) */
+	if (LIST_EMPTY(&env_free_list)) {
+		return -E_NO_FREE_ENV;
+	}
+	e = LIST_FIRST(&env_free_list);
+
+	/* Step 2: Call a 'env_setup_vm' to initialize the user address space for this new Env. */
+	/* Exercise 3.4: Your code here. (2/4) */
+	// r = env_setup_vm(e);
+	// if (r < 0) {
+	// 	return r;
+	// }
+	e->env_pgdir = envs[ENVX(parent_id)].env_pgdir;
+	e->env_pgdir.pp_ref++;
+
+	/* Step 3: Initialize these fields for the new Env with appropriate values:
+	 *   'env_user_tlb_mod_entry' (lab4), 'env_runs' (lab6), 'env_id' (lab3), 'env_asid' (lab3),
+	 *   'env_parent_id' (lab3)
+	 *
+	 * Hint:
+	 *   Use 'asid_alloc' to allocate a free asid.
+	 *   Use 'mkenvid' to allocate a free envid.
+	 */
+	e->env_user_tlb_mod_entry = 0; // for lab4
+	e->env_runs = 0;	       // for lab6
+	/* Exercise 3.4: Your code here. (3/4) */
+	e->env_id = mkenvid(e);
+	e->env_asid = envs[ENVX(parent_id)].env_asid;
 	e->env_parent_id = parent_id;
 
 	/* Step 4: Initialize the sp and 'cp0_status' in 'e->env_tf'.
