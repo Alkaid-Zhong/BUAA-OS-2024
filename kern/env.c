@@ -409,8 +409,12 @@ void env_free(struct Env *e) {
 		/* Hint: Unmap all PTEs in this page table. */
 		for (pteno = 0; pteno <= PTX(~0); pteno++) {
 			if (pt[pteno] & PTE_V) {
-				page_remove(e->env_pgdir, e->env_asid,
-					    (pdeno << PDSHIFT) | (pteno << PGSHIFT));
+				if (pa2page(pa).pp_ref == 1) {
+					page_remove(e->env_pgdir, e->env_asid,
+							(pdeno << PDSHIFT) | (pteno << PGSHIFT));
+				} else {
+					pa2page(pa).pp_ref--;
+				}
 			}
 		}
 		/* Hint: free the page table itself. */
@@ -422,7 +426,11 @@ void env_free(struct Env *e) {
 	/* Hint: free the page directory. */
 	page_decref(pa2page(PADDR(e->env_pgdir)));
 	/* Hint: free the ASID */
-	asid_free(e->env_asid);
+	if (pa2page(PADDR(e->env_pgdir)).pp_ref == 1) {
+		asid_free(e->env_asid);
+	} else {
+		pa2page(PADDR(e->env_pgdir)).pp_ref--;
+	}
 	/* Hint: invalidate page directory in TLB */
 	tlb_invalidate(e->env_asid, UVPT + (PDX(UVPT) << PGSHIFT));
 	/* Hint: return the environment to the free list. */
