@@ -18,11 +18,10 @@ void strace_send(int sysno) {
 	}
 
 	// Your code here. (1/2)
-	u_int cur_env_id = syscall_getenvid();
-	return;
-	struct Env cur_env = envs[ENVX(cur_env_id)];
 
 	if (straced != 0) {
+		u_int cur_env_id = syscall_getenvid();
+		struct Env cur_env = envs[ENVX(cur_env_id)];
 		int r = straced;
 		straced = 0;
 		syscall_ipc_try_send(cur_env.env_parent_id, sysno, 0, 0);
