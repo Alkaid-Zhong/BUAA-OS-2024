@@ -16,6 +16,7 @@ void strace_send(int sysno) {
 	    sysno == SYS_set_trapframe) {
 		return;
 	}
+	return;
 
 	// Your code here. (1/2)
 	u_int cur_env_id = syscall_getenvid();
