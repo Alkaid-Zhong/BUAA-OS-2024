@@ -824,7 +824,7 @@ int copy_file_content(struct File *src, struct File *dst) {
 	//   strcpy(dst_blk, src_blk);
 	  int j;
 	  for (j = 0; j < BLOCK_SIZE; j++) {
-		dst_blk[j] = src_blk[i];
+		((char*)dst_blk)[j] = ((char*)src_blk)[j];
 	  }
 	  file_dirty(dst, i * BLOCK_SIZE);
    }
