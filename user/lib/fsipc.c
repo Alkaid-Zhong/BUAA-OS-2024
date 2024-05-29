@@ -143,8 +143,9 @@ int fsipc_sync(void) {
 // lab5-2-exam
 int fsipc_copy(const char *src_path, const char *dst_path) {
     // Lab 5-2-Exam: Your code here. (1/6)
-   	size_t len = strlen(dst_path);
-	if (len == 0 || len > MAXPATHLEN) {
+	size_t len_src = strlen(src_path);
+   	size_t len_dst = strlen(dst_path);
+	if (len_src == 0 || len_src > MAXPATHLEN || len_dst == 0 || len_dst > MAXPATHLEN) {
 		return -E_BAD_PATH;
 	}
 
