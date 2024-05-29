@@ -809,3 +809,22 @@ int file_remove(char *path) {
 
 	return 0;
 }
+
+// lab5-2-exam
+int copy_file_content(struct File *src, struct File *dst) {
+   void *src_blk, *dst_blk;
+   int r;
+   int nblock;
+   // Calculate the total number of blocks in the source file.
+   nblock = ROUND(src->f_size, BLOCK_SIZE) / BLOCK_SIZE;
+   for (u_int i = 0; i < nblock; i++) {
+      // Lab 5-2-Exam: Your code here. (3/6)
+	  try(file_get_block(src, i, &src_blk));
+	  try(file_get_block(dst, i, &dst_blk));
+	  strcpy(dst_blk, src_blk);
+	  file_dirty(dst, i * BLOCK_SIZE);
+   }
+   // Flush the changes to the destination file
+   file_flush(dst);
+   return 0;
+}
