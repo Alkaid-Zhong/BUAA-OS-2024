@@ -125,6 +125,10 @@ int sync(void);
 			user_panic("assertion failed: %s", #x);                                    \
 	} while (0)
 
+// lab5-2-exam
+int copy(const char *src_path, const char *dst_path);
+int fsipc_copy(const char *,const char *);
+
 // File open modes
 #define O_RDONLY 0x0000	 /* open for reading only */
 #define O_WRONLY 0x0001	 /* open for writing only */
