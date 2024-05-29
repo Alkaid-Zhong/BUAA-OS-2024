@@ -18,7 +18,7 @@
 // static char *path_dst = "/target";
 // static char *file_dst = "/target/rr/test.rs";
 static char *path_src = "/bin";
-static char *file_src = "/bin/test.rs";
+static char *file_src = "/bin/rr/test.rs";
 static char *path_dst = "/target";
 static char *file_dst = "/target/test.rs";
 
