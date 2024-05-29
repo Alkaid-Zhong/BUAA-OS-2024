@@ -295,6 +295,14 @@ void serve_remove(u_int envid, struct Fsreq_remove *rq) {
 
 }
 
+// lab5-2-exam
+void serve_copy(u_int envid, struct Fsreq_copy *rq){
+   	// Lab 5-2-Exam: Your code here. (6/6)
+   	int r;
+	r = file_copy(rq->req_src_path, rq->req_dst_path);
+	ipc_send(envid, r, 0, 0);
+}
+
 /*
  * Overview:
  *  Serve to dirty the file.
