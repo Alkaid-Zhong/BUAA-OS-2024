@@ -821,12 +821,8 @@ int copy_file_content(struct File *src, struct File *dst) {
       // Lab 5-2-Exam: Your code here. (3/6)
 	  try(file_get_block(src, i, &src_blk));
 	  try(file_get_block(dst, i, &dst_blk));
-	//   strcpy(dst_blk, src_blk);
-	  int j;
-	  for (j = 0; j < BLOCK_SIZE; j++) {
-		((char*)dst_blk)[j] = ((char*)src_blk)[j];
-	  }
-	  file_dirty(dst, i * BLOCK_SIZE);
+	  strcpy(dst_blk, src_blk);
+	  file_dirty(dst, dst_blk - dst);
    }
    // Flush the changes to the destination file
    file_flush(dst);
