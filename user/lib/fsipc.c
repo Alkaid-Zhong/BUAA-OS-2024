@@ -148,7 +148,7 @@ int fsipc_copy(const char *src_path, const char *dst_path) {
 		return -E_BAD_PATH;
 	}
 
-	struct Fsreq_copy *req = (struct Fsreq_remove *)fsipcbuf;
+	struct Fsreq_copy *req = (struct Fsreq_copy *)fsipcbuf;
 	
 	strcpy(req->req_src_path, src_path);
 	strcpy(req->req_dst_path, dst_path);
