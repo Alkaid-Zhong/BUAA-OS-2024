@@ -856,9 +856,9 @@ int copy_directory_contents(struct File *src, struct File *dst) {
 			// depending on the value of 'f_type'.
 			// Lab 5-2-Exam: Your code here. (5/6)
 			if (dst_file->f_type == FTYPE_REG) {
-				try(copy_file_content(dir_content, dst_file));
+				try(copy_file_content(dir_content[j], dst_file));
 			} else {
-				try(copy_directory_contents(dir_content, dst_file));
+				try(copy_directory_contents(dir_content[j], dst_file));
 			}
 			file_dirty(dst_file, j * BLOCK_SIZE);
 		}
