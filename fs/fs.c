@@ -844,7 +844,7 @@ int copy_directory_contents(struct File *src, struct File *dst) {
 			struct File *dst_file;
 			// Step1: Alloc dst_file using 'dir_alloc_file'
 			// Lab 5-2-Exam: Your code here. (4/6)
-			try(dir_alloc_file(dir_content, &dst_file));
+			try(dir_alloc_file(dst, &dst_file));
 
 			// Step2: Assign corresponding values of 'f_name', 'f_dir', 'f_size', 'f_type' to dst_file
 			strcpy(dst_file->f_name, dir_content[j].f_name);
