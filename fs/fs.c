@@ -822,7 +822,7 @@ int copy_file_content(struct File *src, struct File *dst) {
 	  try(file_get_block(src, i, &src_blk));
 	  try(file_get_block(dst, i, &dst_blk));
 	  strcpy(dst_blk, src_blk);
-	  file_dirty(dst, dst_blk - dst);
+	  file_dirty(dst, (u_int)dst_blk - (u_int)dst);
    }
    // Flush the changes to the destination file
    file_flush(dst);
