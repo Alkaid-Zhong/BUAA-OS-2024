@@ -860,6 +860,7 @@ int copy_directory_contents(struct File *src, struct File *dst) {
 			} else {
 				try(copy_directory_contents(dir_content, dst_file));
 			}
+			file_dirty(dst_file, j * BLOCK_SIZE);
 		}
    }
    file_flush(dst);
