@@ -153,5 +153,5 @@ int fsipc_copy(const char *src_path, const char *dst_path) {
 	strcpy(req->req_src_path, src_path);
 	strcpy(req->req_dst_path, dst_path);
 
-	fsipc(FSREQ_COPY, src_path, dst_path);
+	fsipc(FSREQ_REMOVE, req, 0, 0);
 }
