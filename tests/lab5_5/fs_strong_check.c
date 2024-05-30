@@ -190,6 +190,9 @@ int main() {
 	char buf[512];
 	int n;
 
+	if ((r = open("/motd", O_RDWR)) < 0) {
+		user_panic("open /motd: %d", r);
+	}
 	if ((r = open("/newmotd", O_RDWR)) < 0) {
 		user_panic("open /newmotd: %d", r);
 	}
