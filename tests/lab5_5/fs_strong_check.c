@@ -134,51 +134,101 @@ void test_remove(char *pth) {
 	debugf("pass remove test with file=%s\n", pth);
 }
 
+// int main() {
+// 	char test_str1[1 + 1];
+// 	char test_str2[128 + 1];
+// 	char test_str3[512 + 1];
+// 	int i = 0;
+// 	for (i = 0; i < 1; i++) {
+// 		test_str1[i] = 'a';
+// 	}
+// 	test_str1[1] = 0;
+
+// 	for (i = 0; i < 128; i++) {
+// 		test_str2[i] = 'b';
+// 	}
+
+// 	test_str2[128] = 0;
+
+// 	for (i = 0; i < 512; i++) {
+// 		test_str3[i] = 'c';
+// 	}
+// 	test_str3[512] = 0;
+
+// 	char *files[4] = {file1, file2, file3, file4};
+// 	for (i = 0; i < 4; i++) {
+// 		// debugf("file:%s\n", files[i]);
+// 		test_read(files[i], test_str1);
+// 		test_read(files[i], test_str2);
+// 		test_read(files[i], test_str3);
+// 	}
+
+// 	for (i = 0; i < 4; i++) {
+// 		test_fd_alloc(files[i]);
+// 	}
+
+// 	for (i = 0; i < 4; i++) {
+// 		test_close(files[i]);
+// 	}
+
+// 	for (i = 0; i < 4; i++) {
+// 		test_mode(files[i]);
+// 	}
+
+// 	for (i = 0; i < 4; i++) {
+// 		test_remove(files[i]);
+// 	}
+// 	int r;
+// 	syscall_read_dev(&r, 0x10000010, 4);
+// 	return 0;
+// }
+
 int main() {
-	char test_str1[1 + 1];
-	char test_str2[128 + 1];
-	char test_str3[512 + 1];
-	int i = 0;
-	for (i = 0; i < 1; i++) {
-		test_str1[i] = 'a';
-	}
-	test_str1[1] = 0;
-
-	for (i = 0; i < 128; i++) {
-		test_str2[i] = 'b';
-	}
-
-	test_str2[128] = 0;
-
-	for (i = 0; i < 512; i++) {
-		test_str3[i] = 'c';
-	}
-	test_str3[512] = 0;
-
-	char *files[4] = {file1, file2, file3, file4};
-	for (i = 0; i < 4; i++) {
-		// debugf("file:%s\n", files[i]);
-		test_read(files[i], test_str1);
-		test_read(files[i], test_str2);
-		test_read(files[i], test_str3);
-	}
-
-	for (i = 0; i < 4; i++) {
-		test_fd_alloc(files[i]);
-	}
-
-	for (i = 0; i < 4; i++) {
-		test_close(files[i]);
-	}
-
-	for (i = 0; i < 4; i++) {
-		test_mode(files[i]);
-	}
-
-	for (i = 0; i < 4; i++) {
-		test_remove(files[i]);
-	}
+	// fs_init();
 	int r;
-	syscall_read_dev(&r, 0x10000010, 4);
-	return 0;
+	int fdnum;
+	char buf[512];
+	int n;
+
+	if ((r = open("/newmotd", O_RDWR)) < 0) {
+		user_panic("open /newmotd: %d", r);
+	}
+	fdnum = r;
+	debugf("open is good\n");
+
+	if ((n = read(fdnum, buf, 511)) < 0) {
+		user_panic("read /newmotd: %d", r);
+	}
+	if (strcmp(buf, diff_msg) != 0) {
+		user_panic("read returned wrong data");
+	}
+	debugf("read is good\n");
+
+	int id;
+
+	if ((id = fork()) == 0) {
+		if ((n = read(fdnum, buf, 511)) < 0) {
+			user_panic("child read /newmotd: %d", r);
+		}
+		if (strcmp(buf, diff_msg) != 0) {
+			user_panic("child read returned wrong data");
+		}
+		debugf("child read is good && child_fd == %d\n",r);
+		struct Fd *fdd;
+		fd_lookup(r,&fdd);
+		debugf("child_fd's offset == %d\n",fdd->fd_offset);
+	}
+	else {
+		if((n = read(fdnum, buf, 511)) < 0) {
+			user_panic("father read /newmotd: %d", r);
+		}
+		if (strcmp(buf, diff_msg) != 0) {
+			user_panic("father read returned wrong data");
+		}
+		debugf("father read is good && father_fd == %d\n",r);
+		struct Fd *fdd;
+		fd_lookup(r,&fdd);
+		debugf("father_fd's offset == %d\n",fdd->fd_offset);
+	}
+ 	return 0;
 }
