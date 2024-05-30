@@ -88,6 +88,7 @@ void fs_check() {
 int main() {
 	fs_init();
 	//fs_check();
+	debugf("check\n");
 	struct File *f;
 	int fd;
 	if ((fd = file_open("/newmotd", &f)) < 0) {
