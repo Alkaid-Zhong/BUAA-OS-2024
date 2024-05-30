@@ -194,12 +194,7 @@ int main() {
 		user_panic("open /newmotd: %d", r);
 	}
 	fdnum = r;
-	debugf("open is good\n");
-
-	if ((n = read(fdnum, buf, 511)) < 0) {
-		user_panic("read /newmotd: %d", r);
-	}
-	debugf("read is good\n");
+	debugf("fdnum: %d\n", fdnum);
 
 	int id;
 
@@ -207,19 +202,17 @@ int main() {
 		if ((n = read(fdnum, buf, 511)) < 0) {
 			user_panic("child read /newmotd: %d", r);
 		}
-		debugf("child read is good && child_fd == %d\n",r);
 		struct Fd *fdd;
 		fd_lookup(r,&fdd);
-		debugf("child_fd's offset == %d\n",fdd->fd_offset);
+		debugf("child fd->offset == %d\n",fdd->fd_offset);
 	}
 	else {
 		if((n = read(fdnum, buf, 511)) < 0) {
-			user_panic("father read /newmotd: %d", r);
+			user_panic("parent read /newmotd: %d", r);
 		}
-		debugf("father read is good && father_fd == %d\n",r);
 		struct Fd *fdd;
 		fd_lookup(r,&fdd);
-		debugf("father_fd's offset == %d\n",fdd->fd_offset);
+		debugf("parent fd->offset == %d\n",fdd->fd_offset);
 	}
  	return 0;
 }
