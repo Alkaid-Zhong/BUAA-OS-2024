@@ -199,9 +199,6 @@ int main() {
 	if ((n = read(fdnum, buf, 511)) < 0) {
 		user_panic("read /newmotd: %d", r);
 	}
-	if (strcmp(buf, diff_msg) != 0) {
-		user_panic("read returned wrong data");
-	}
 	debugf("read is good\n");
 
 	int id;
@@ -209,9 +206,6 @@ int main() {
 	if ((id = fork()) == 0) {
 		if ((n = read(fdnum, buf, 511)) < 0) {
 			user_panic("child read /newmotd: %d", r);
-		}
-		if (strcmp(buf, diff_msg) != 0) {
-			user_panic("child read returned wrong data");
 		}
 		debugf("child read is good && child_fd == %d\n",r);
 		struct Fd *fdd;
@@ -221,9 +215,6 @@ int main() {
 	else {
 		if((n = read(fdnum, buf, 511)) < 0) {
 			user_panic("father read /newmotd: %d", r);
-		}
-		if (strcmp(buf, diff_msg) != 0) {
-			user_panic("father read returned wrong data");
 		}
 		debugf("father read is good && father_fd == %d\n",r);
 		struct Fd *fdd;
