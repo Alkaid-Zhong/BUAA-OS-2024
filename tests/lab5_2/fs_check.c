@@ -89,23 +89,27 @@ int main() {
 	fs_init();
 	//fs_check();
 	struct File *f;
-	int r;
-	if ((r = file_open("/newmotd", &f)) < 0) {
-		user_panic("file_open /newmotd: %d", r);
+	int fdnum;
+	if ((fdnum = file_open("/newmotd", &f)) < 0) {
+		user_panic("file_open /newmotd: %d", fdnum);
 	}
-	debugf("r: %d\n", r);
+	debugf("r: %d\n", fdnum);
 
 	char buf[512];
 	int pid;
 	if ((pid = fork()) == 0) {
-		read(r, buf, 511);
-		debugf("child fd after read: %d\n", r);
+		if ((r = read(fdnum, buf, 511)) < 0) {
+			user_panic("child read /newmotd: %d", r);
+		}
+		debugf("child r after read: %d\n", r);
 		struct Fd *fdd;
 		fd_lookup(r, &fdd);
 		debugf("child fd->offset: %d\n", fdd->fd_offset);
 	} else {
-		read(r, buf, 511);
-		debugf("parent fd after read: %d\n", r);
+		if ((r = read(fdnum, buf, 511)) < 0) {
+			user_panic("parent read /newmotd: %d", r);
+		}
+		debugf("parent r after read: %d\n", r);
 		struct Fd *fdd;
 		fd_lookup(r, &fdd);
 		debugf("parent fd->offset: %d\n", fdd->fd_offset);
