@@ -99,6 +99,7 @@ int main() {
 	int pid;
 	int r;
 	if ((pid = fork()) == 0) {
+		debugf("child process id: %d\n", syscall_getenvid());
 		if ((r = read(fdnum, buf, 511)) < 0) {
 			user_panic("child read /newmotd: %d", r);
 		}
@@ -107,6 +108,7 @@ int main() {
 		fd_lookup(r, &fdd);
 		debugf("child fd->offset: %d\n", fdd->fd_offset);
 	} else {
+		debugf("parent process id: %d\n", syscall_getenvid());
 		if ((r = read(fdnum, buf, 511)) < 0) {
 			user_panic("parent read /newmotd: %d", r);
 		}
