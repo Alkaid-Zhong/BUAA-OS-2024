@@ -90,6 +90,7 @@ int main() {
 	//fs_check();
 	struct File *f;
 	int r;
+	debugf("test\n");
 	if ((r = open("/newmotd", O_RDWR)) < 0) {
 		user_panic("file_open /newmotd: %d", r);
 	}
