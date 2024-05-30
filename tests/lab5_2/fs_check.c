@@ -89,15 +89,15 @@ int main() {
 	fs_init();
 	//fs_check();
 	struct File *f;
-	int fdnum;
-	if ((fdnum = file_open("/newmotd", &f)) < 0) {
-		user_panic("file_open /newmotd: %d", fdnum);
+	int r;
+	if ((r = open("/newmotd", O_RDWR)) < 0) {
+		user_panic("file_open /newmotd: %d", r);
 	}
-	debugf("fdnum: %d\n", fdnum);
+	debugf("fdnum: %d\n", r);
 
 	char buf[512];
 	int pid;
-	int r;
+	int fdnum = r;
 	if ((pid = fork()) == 0) {
 		debugf("child process id: %d\n", syscall_getenvid());
 		if ((r = read(fdnum, buf, 511)) < 0) {
