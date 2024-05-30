@@ -13,7 +13,7 @@ int strecmp(char *a, char *b) {
 
 static char *msg = "This is the NEW message of the day!\n";
 static char *diff_msg = "This is a different massage of the day!\n";
-
+/*
 void fs_check() {
 	struct File *f;
 	int r;
@@ -83,10 +83,23 @@ void fs_check() {
 	file_flush(f);
 	file_close(f);
 	debugf("file rewrite is good\n");
-}
+}*/
 
 int main() {
 	fs_init();
-	fs_check();
-	return 0;
+	//fs_check();
+	struct File *f;
+	int fd;
+	if ((fd = file_open("/newmotd", &f)) < 0) {
+		user_panic("file_open /newmotd: %d", fd);
+	}
+	debugf("fd: %d\n", fd);
+
+	int pid;
+	if ((pid = fork()) == 0) {
+
+	} else {
+		debugf("child pid: %d\n", pid);
+	}
+ 	return 0;
 }
