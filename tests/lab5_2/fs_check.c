@@ -93,10 +93,11 @@ int main() {
 	if ((fdnum = file_open("/newmotd", &f)) < 0) {
 		user_panic("file_open /newmotd: %d", fdnum);
 	}
-	debugf("r: %d\n", fdnum);
+	debugf("fdnum: %d\n", fdnum);
 
 	char buf[512];
 	int pid;
+	int r;
 	if ((pid = fork()) == 0) {
 		if ((r = read(fdnum, buf, 511)) < 0) {
 			user_panic("child read /newmotd: %d", r);
