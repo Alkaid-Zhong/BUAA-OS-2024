@@ -137,6 +137,21 @@ static int pipe_read(struct Fd *fd, void *vbuf, u_int n, u_int offset) {
 	//    of bytes read so far.
 	//  - Otherwise, keep yielding until the buffer isn't empty or the pipe is closed.
 	/* Exercise 6.1: Your code here. (2/3) */
+	p = fd2data(fd);
+	rbuf = (char*)vbuf;
+	for (i = 0; i < n; i++) {
+		while (p->p_rpos >= p->p_wpos) {
+			if (i > 0 || _pipe_is_closed(fd, p)) {
+				return i;
+			} else {
+				syscall_yield();
+			}
+		}
+		rbuf[i] = p->p_buf[p->p_rpos % PIPE_SIZE];
+		p->p_rpos++;
+	}
+
+	return n;
 
 	user_panic("pipe_read not implemented");
 }
