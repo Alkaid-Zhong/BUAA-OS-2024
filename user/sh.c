@@ -92,6 +92,11 @@ int parsecmd(char **argv, int *rightpipe) {
 			// and subsequently terminate the process using 'exit'.
 			/* Exercise 6.5: Your code here. (1/3) */
 			fd = open(t, O_RDONLY);
+			if (fd < 0) {
+				debugf("open %s failed!", t);
+				break;
+				exit();
+			}
 			dup(fd, 0);
 			close(fd);
 
@@ -110,6 +115,11 @@ int parsecmd(char **argv, int *rightpipe) {
 			// and subsequently terminate the process using 'exit'.
 			/* Exercise 6.5: Your code here. (2/3) */
 			fd = open(t, O_WRONLY);
+			if (fd < 0) {
+				debugf("open %s failed!", t);
+				break;
+				exit();
+			}
 			dup(fd, 1);
 			close(fd);
 
