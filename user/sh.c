@@ -93,8 +93,7 @@ int parsecmd(char **argv, int *rightpipe) {
 			/* Exercise 6.5: Your code here. (1/3) */
 			fd = open(t, O_RDONLY);
 			if (fd < 0) {
-				debugf("open %s failed!", t);
-				break;
+				debugf("open %s failed!\n", t);
 				exit();
 			}
 			dup(fd, 0);
@@ -116,8 +115,7 @@ int parsecmd(char **argv, int *rightpipe) {
 			/* Exercise 6.5: Your code here. (2/3) */
 			fd = open(t, O_WRONLY);
 			if (fd < 0) {
-				debugf("open %s failed!", t);
-				break;
+				debugf("open %s failed!\n", t);
 				exit();
 			}
 			dup(fd, 1);
