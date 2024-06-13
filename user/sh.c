@@ -206,6 +206,24 @@ void runcmd(char *s) {
 	exit();
 }
 
+void runcmd_conditional(char *s) {
+	char *cmd_buf[MAXARGS];
+	int cmd_buf_len = 0;
+
+	while(*s) {
+		if (*s == '|' && *(s+1) == '|') {
+			cmd_buf[cmd_buf_len] = '\0';
+
+		} else if (*s == '&' && *(s+1) == '&') {
+			cmd_buf[cmd_buf_len] = '\0';
+
+		} else {
+			cmd_buf[cmd_buf_len++] = *s;
+			s++;
+		}
+	}
+}
+
 
 
 void readline(char *buf, u_int n) {
@@ -296,11 +314,7 @@ int main(int argc, char **argv) {
 			runcmd(buf);
 			exit();
 		} else {
-			int exit_status = -1;
-			exit_status = env->env_ipc_value;
-			syscall_ipc_recv(0);
 			wait(r);
-			debugf("runcmd return value: %d\n", exit_status);
 		}
 	}
 	return 0;
