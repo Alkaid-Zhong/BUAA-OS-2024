@@ -18,15 +18,15 @@ int main(int argc, char **argv) {
         debugf("rm: use rm [-r|f] <filename|dirname>\n");
         return 0;
     }
-    int r = open(path, O_RDONLY);
-    if (r != 0) {
+    int fdnum = open(path, O_RDONLY);
+    if (fdnum != 0) {
         if (!f) {
             printf("rm: cannot remove '%s': No such file or directory\n", path);
         }
         return 1;
     }
     struct Fd *fd;
-    fd_lookup(r, &fd);
+    fd_lookup(fdnum, &fd);
     struct Filefd *ffd = (struct Filefd*) fd;
     int type = ffd->f_file.f_type;
 
