@@ -219,16 +219,14 @@ char* getNextCmdAndOp(char *s, char **cmd_buf, char *op) {
 			*cmd_buf[len] = '\0';
 			*op = '&';
 			return s + 2;
-		} else if (*s == '\0') {
-			*cmd_buf[len] = '\0';
-			*op = '\0';
-			return s;
 		} else {
-			*cmd_buf[len] = *s;
+			*cmd_buf[len++] = *s;
 			s++;
-			len++;
 		}
 	}
+	*cmd_buf[len] = '\0';
+	*op = '\0';
+	return s;
 }
 
 void runcmd_conditional(char *s) {
