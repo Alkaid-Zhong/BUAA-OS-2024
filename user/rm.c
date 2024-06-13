@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
         return 0;
     }
     int fdnum = open(path, O_RDONLY);
-    if (fdnum != 0) {
+    if (fdnum < 0) {
         if (!f) {
             printf("rm: cannot remove '%s': No such file or directory\n", path);
         }
