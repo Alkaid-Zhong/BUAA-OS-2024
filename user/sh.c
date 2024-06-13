@@ -249,12 +249,18 @@ void runcmd_conditional(char *s) {
 			}
 			if (r == 0) {
 				exit_status = runcmd(cmd_buf);
+				syscall_ipc_try_send(env->env_parent_id, 2024, 0, 0);
 				syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
 				exit();
 			} else {
-				env->env_ipc_value = 1;
 				syscall_ipc_recv(0);
-				exit_status = env->env_ipc_value;
+				int magic_num = env->env_ipc_value;
+				if (magic_num != 2024) {
+					exit_status = 2024;
+				} else {
+					syscall_ipc_recv(0);
+					exit_status = env->env_ipc_value;
+				}
 				wait(r);
 				debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
 			}
