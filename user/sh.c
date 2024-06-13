@@ -204,53 +204,60 @@ int runcmd(char *s) {
 		wait(rightpipe);
 	}
 	debugf("command %s exit with return value %d\n", argv[0], exit_status);
-	close_all();
 	return exit_status;
 	// exit();
 }
 
-int runcmd_conditional(char *s) {
-	char cmd_buf[1024];
-	int cmd_buf_len = 0;
-
-	int exit_status = 0;
-	char last_condition = 0;
+char* getNextCmdAndOp(char *s, char **cmd_buf, char *op) {
+	int len = 0;
 	while(*s) {
-		char condition = 0;
 		if (*s == '|' && *(s+1) == '|') {
-			condition = '|';
+			*cmd_buf[len] = '\0';
+			*op = '|';
+			return s + 2;
 		} else if (*s == '&' && *(s+1) == '&') {
-			condition = '&';
+			*cmd_buf[len] = '\0';
+			*op = '&';
+			return s + 2;
+		} else if (*s == '\0') {
+			*cmd_buf[len] = '\0';
+			*op = '\0';
+			return s;
 		} else {
-			cmd_buf[cmd_buf_len++] = *s;
+			*cmd_buf[len] = *s;
 			s++;
-			continue;
+			len++;
 		}
-		cmd_buf[cmd_buf_len] = '\0';
-		char tmp[1024];
-		strcpy(tmp, cmd_buf);
+	}
+}
 
-		if (last_condition == 0 || 
-		    (last_condition == '&' && exit_status == 0) || 
-			(last_condition == '|' && exit_status != 0)) {
-			exit_status = runcmd(cmd_buf);
-			debugf("command %s returned with return value %d\n", tmp, exit_status);
+void runcmd_conditional(char *s) {
+	char *bg = s;
+	char *cmd_buf[1024];
+	char op;
+	int r;
+	int exit_status;
+	while(1) {
+		bg = getNextCmdAndOp(bg, &cmd_buf, &op);
+
+		if ((r = fork()) < 0) {
+			user_panic("fork: %d", r);
+		}
+		if (r == 0) {
+			exit_status = runcmd(buf);
+			syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
+			exit();
+		} else {
+			syscall_ipc_recv(0);
+			exit_status = env->env_ipc_value;
+			wait(r);
+			debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
 		}
 
-		cmd_buf_len = 0;
-		s += 2;
-		last_condition = condition;
+		if (op == '\0') {
+			break;
+		}
 	}
-	cmd_buf[cmd_buf_len] = '\0';
-	char tmp[1024];
-	strcpy(tmp, cmd_buf);
-	if (last_condition == 0 || 
-		(last_condition == '&' && exit_status == 0) || 
-		(last_condition == '|' && exit_status != 0)) {
-		exit_status = runcmd(cmd_buf);
-		debugf("command %s returned with return value %d\n", tmp, exit_status);
-	}
-	return exit_status;
 }
 
 
@@ -336,16 +343,16 @@ int main(int argc, char **argv) {
 		if (echocmds) {
 			printf("# %s\n", buf);
 		}
-		if ((r = fork()) < 0) {
-			user_panic("fork: %d", r);
-		}
-		if (r == 0) {
-			return runcmd_conditional(buf);
-			// runcmd(buf);
-			// exit();
-		} else {
-			wait(r);
-		}
+		runcmd_conditional(buf);
+		// if ((r = fork()) < 0) {
+		// 	user_panic("fork: %d", r);
+		// }
+		// if (r == 0) {
+		// 	// runcmd(buf);
+		// 	// exit();
+		// } else {
+		// 	wait(r);
+		// }
 	}
 	return 0;
 }
