@@ -293,14 +293,14 @@ int main(int argc, char **argv) {
 			user_panic("fork: %d", r);
 		}
 		if (r == 0) {
-			int exit_status = -1;
-			syscall_ipc_recv(0);
-			exit_status = env->env_ipc_value;
 			runcmd(buf);
-			debugf("runcmd return value: %d\n", exit_status);
 			exit();
 		} else {
+			int exit_status = -1;
+			exit_status = env->env_ipc_value;
+			syscall_ipc_recv(0);
 			wait(r);
+			debugf("runcmd return value: %d\n", exit_status);
 		}
 	}
 	return 0;
