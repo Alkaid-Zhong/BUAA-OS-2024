@@ -191,7 +191,7 @@ int runcmd(char *s) {
 
 	close_all();
 
-	int exit_status = -1;
+	int exit_status = 0;
 
 	if (child >= 0) {
 		syscall_ipc_recv(0);
@@ -215,7 +215,7 @@ void runcmd_conditional(char *s) {
 	char op;
 	char last_op = 0;
 	int r;
-	int exit_status;
+	int exit_status = 0;
 
 	while(1) {
 		op = '\0';
