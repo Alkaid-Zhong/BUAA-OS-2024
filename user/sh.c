@@ -210,7 +210,6 @@ int runcmd(char *s) {
 
 
 void runcmd_conditional(char *s) {
-	char *bg = s;
 	char cmd_buf[1024];
 	int cmd_buf_len = 0;
 	char op;
@@ -218,6 +217,7 @@ void runcmd_conditional(char *s) {
 	int exit_status;
 
 	while(1) {
+		op = '\0';
 		while(*s) {
 			if (*s == '|' && *(s+1) == '|') {
 				cmd_buf[cmd_buf_len] = '\0';
