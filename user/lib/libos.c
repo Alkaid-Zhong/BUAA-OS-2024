@@ -2,7 +2,7 @@
 #include <lib.h>
 #include <mmu.h>
 
-int exit_status;
+int exit_status = -1;
 
 void exit(void) {
 	// After fs is ready (lab5), all our open files should be closed before dying.
