@@ -10,7 +10,7 @@ void exit(void) {
 	close_all();
 #endif
 
-	// debugf("exit called, pid: %d, return value: %d\n", env->env_id, exit_status);
+	debugf("exit called, pid: %d, return value: %d\n", env->env_id, exit_status);
 	syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
 	syscall_env_destroy(0);
 	user_panic("unreachable code");
