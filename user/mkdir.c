@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     } else {
         if ((r = create(argv[1], FTYPE_DIR)) != 0) {
             if (!p) {
-                printf("mkdir: cannot create directory '%s': No such file or directory", path);
+                printf("mkdir: cannot create directory '%s': No such file or directory\n", path);
                 return 1;
             }
         }
