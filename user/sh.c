@@ -217,7 +217,7 @@ int runcmd_conditional(char *s) {
 		if (*s == '|' && *(s+1) == '|') {
 			cmd_buf[cmd_buf_len] = '\0';
 			char tmp[1024];
-			stycpy(tmp, cmd_buf);
+			strcpy(tmp, cmd_buf);
 			exit_status = runcmd(cmd_buf);
 			debugf("in || command %s returned with return value %d\n", tmp, exit_status);
 
@@ -226,7 +226,7 @@ int runcmd_conditional(char *s) {
 		} else if (*s == '&' && *(s+1) == '&') {
 			cmd_buf[cmd_buf_len] = '\0';
 			char tmp[1024];
-			stycpy(tmp, cmd_buf);
+			strcpy(tmp, cmd_buf);
 			exit_status = runcmd(cmd_buf);
 			debugf("in || command %s returned with return value %d\n", tmp, exit_status);
 
@@ -239,7 +239,7 @@ int runcmd_conditional(char *s) {
 	}
 	cmd_buf[cmd_buf_len] = '\0';
 	char tmp[1024];
-	stycpy(tmp, cmd_buf);
+	strcpy(tmp, cmd_buf);
 	exit_status = runcmd(cmd_buf);
 	debugf("in || command %s returned with return value %d\n", tmp, exit_status);
 	return exit_status;
