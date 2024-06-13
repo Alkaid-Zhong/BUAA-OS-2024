@@ -222,10 +222,12 @@ void runcmd_conditional(char *s) {
 			if (*s == '|' && *(s+1) == '|') {
 				cmd_buf[cmd_buf_len] = '\0';
 				op = '|';
+				s += 2;
 				break;
 			} else if (*s == '&' && *(s+1) == '&') {
 				cmd_buf[cmd_buf_len] = '\0';
 				op = '&';
+				s += 2;
 				break;
 			} else {
 				cmd_buf[cmd_buf_len++] = *s;
