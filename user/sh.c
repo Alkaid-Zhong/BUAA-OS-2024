@@ -166,6 +166,7 @@ int parsecmd(char **argv, int *rightpipe) {
 }
 
 int runcmd(char *s) {
+	debugf("running command %s\n", s);
 	gettoken(s, 0);
 
 	char *argv[MAXARGS];
@@ -232,7 +233,6 @@ int runcmd_conditional(char *s) {
 		}
 	}
 	cmd_buf[cmd_buf_len] = '\0';
-	debugf("command %s\n", cmd_buf);
 	return runcmd(cmd_buf);
 }
 
