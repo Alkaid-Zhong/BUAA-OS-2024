@@ -212,18 +212,21 @@ int runcmd_conditional(char *s) {
 	char cmd_buf[1024];
 	int cmd_buf_len = 0;
 
+	int exit_status = -1;
 	while(*s) {
 		if (*s == '|' && *(s+1) == '|') {
 			cmd_buf[cmd_buf_len] = '\0';
 
-			return runcmd(cmd_buf);
+			exit_status = runcmd(cmd_buf);
+			debugf("command %s returned with return value %d\n", cmd_buf, exit_status);
 
 			cmd_buf_len = 0;
 			s += 2;
 		} else if (*s == '&' && *(s+1) == '&') {
 			cmd_buf[cmd_buf_len] = '\0';
 
-			return runcmd(cmd_buf);
+			exit_status = runcmd(cmd_buf);
+			debugf("command %s returned with return value %d\n", cmd_buf, exit_status);
 
 			cmd_buf_len = 0;
 			s += 2;
@@ -233,7 +236,9 @@ int runcmd_conditional(char *s) {
 		}
 	}
 	cmd_buf[cmd_buf_len] = '\0';
-	return runcmd(cmd_buf);
+	exit_status = runcmd(cmd_buf);
+	debugf("command %s returned with return value %d\n", cmd_buf, exit_status);
+	return exit_status;
 }
 
 
