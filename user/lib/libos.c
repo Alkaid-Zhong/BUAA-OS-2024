@@ -20,8 +20,9 @@ void libmain(int argc, char **argv) {
 	env = &envs[ENVX(syscall_getenvid())];
 
 	// call user main routine
-	debugf("lib main, pid: %d\n", env->env_id);
+	debugf("lib main called, pid: %d\n", env->env_id);
 	exit_status = main(argc, argv);
+	debugf("lib main returned, pid: %d, return value: %d\n", env->env_id, exit_status);
 
 	// exit gracefully
 	exit();
