@@ -9,9 +9,15 @@ int main(int argc, char **argv) {
         path = argv[2];
         if (strcmp(argv[1], "-r") == 0) {
             r = 1;
-        } else {
-            
         }
+        if (strcmp(argv[1], "-rf") == 0) {
+            r = 1;
+            f = 1;
+        }
+    } else {
+        debugf("rm: use rm [-r|f] <filename|dirname>\n");
+        return 0;
     }
+    int r = open(path, O_RDONLY);
     return 0;
 }
