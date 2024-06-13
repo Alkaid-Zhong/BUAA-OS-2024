@@ -165,7 +165,7 @@ int parsecmd(char **argv, int *rightpipe) {
 	return argc;
 }
 
-void runcmd(char *s) {
+int runcmd(char *s) {
 	gettoken(s, 0);
 
 	char *argv[MAXARGS];
@@ -203,10 +203,11 @@ void runcmd(char *s) {
 		wait(rightpipe);
 	}
 	debugf("command %s exit with return value %d\n", argv[0], exit_status);
-	exit();
+	return exit_status;
+	// exit();
 }
 
-void runcmd_conditional(char *s) {
+int runcmd_conditional(char *s) {
 	char *cmd_buf[MAXARGS];
 	int cmd_buf_len = 0;
 
@@ -214,14 +215,21 @@ void runcmd_conditional(char *s) {
 		if (*s == '|' && *(s+1) == '|') {
 			cmd_buf[cmd_buf_len] = '\0';
 
+			return runcmd(cmd_buf);
+
+			cmd_buf_len = 0;
 		} else if (*s == '&' && *(s+1) == '&') {
 			cmd_buf[cmd_buf_len] = '\0';
 
+			return runcmd(cmd_buf);
+
+			cmd_buf_len = 0;
 		} else {
 			cmd_buf[cmd_buf_len++] = *s;
 			s++;
 		}
 	}
+	return runcmd(cmd_buf);
 }
 
 
@@ -311,8 +319,9 @@ int main(int argc, char **argv) {
 			user_panic("fork: %d", r);
 		}
 		if (r == 0) {
-			runcmd(buf);
-			exit();
+			return runcmd_conditional(buf);
+			// runcmd(buf);
+			// exit();
 		} else {
 			wait(r);
 		}
