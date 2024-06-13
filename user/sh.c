@@ -81,7 +81,7 @@ int parsecmd(char **argv, int *rightpipe) {
 		char *t;
 		int fd, r;
 		int c = gettoken(0, &t);
-		debugf("parsecmd: got token: %s, type: %c\n", t, c);
+		debugf("parsecmd: got token: %s, type: %d\n", t, c);
 		switch (c) {
 		case 0:
 			return argc;
