@@ -166,7 +166,7 @@ int parsecmd(char **argv, int *rightpipe) {
 }
 
 int runcmd(char *s) {
-	debugf("running command %s\n", s);
+	// debugf("running command %s\n", s);
 	gettoken(s, 0);
 
 	char *argv[MAXARGS];
@@ -203,7 +203,7 @@ int runcmd(char *s) {
 	if (rightpipe) {
 		wait(rightpipe);
 	}
-	debugf("command %s exit with return value %d\n", argv[0], exit_status);
+	// debugf("command %s exit with return value %d\n", argv[0], exit_status);
 	return exit_status;
 	// exit();
 }
@@ -238,7 +238,7 @@ void runcmd_conditional(char *s) {
 				s++;
 			}
 		}
-		debugf("running cmd: %s, op %c\n", cmd_buf, op);
+		// debugf("running cmd: %s, op %c\n", cmd_buf, op);
 
 		if (last_op == 0 || 
 		    (last_op == '&' && exit_status == 0) ||
@@ -255,7 +255,7 @@ void runcmd_conditional(char *s) {
 				syscall_ipc_recv(0);
 				exit_status = env->env_ipc_value;
 				wait(r);
-				debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
+				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
 			}
 
 		}
