@@ -15,8 +15,6 @@
  *     - '>' for > (stdout redirection).
  *     - '|' for | (pipe).
  *     - 'w' for a word (command, argument, or file name).
- *     - 'a' for &&
- * 	   - 'o' for ||
  *
  *   The buffer is modified to turn the spaces after words into zero bytes ('\0'), so that the
  *   returned token is a null-terminated string.
@@ -39,14 +37,6 @@ int _gettoken(char *s, char **p1, char **p2) {
 		int t = *s;
 		*p1 = s;
 		*s++ = 0;
-		if (t == *s) { // is && or ||
-			*s++ = 0;
-			if (t == '|') {
-				return 'o';
-			} else if (t == '&') {
-				return 'a';
-			}
-		}
 		*p2 = s;
 		return t;
 	}
@@ -81,11 +71,6 @@ int parsecmd(char **argv, int *rightpipe) {
 		char *t;
 		int fd, r;
 		int c = gettoken(0, &t);
-		if (c == 0) {
-			debugf("parsecmd: command: none, type: %d\n", c);
-		} else {
-			debugf("parsecmd: command: %s, type: %d\n", t, c);
-		}
 		switch (c) {
 		case 0:
 			return argc;
@@ -205,7 +190,7 @@ void runcmd(char *s) {
 
 	close_all();
 
-	int exit_status;
+	int exit_status = -1;
 
 	if (child >= 0) {
 		syscall_ipc_recv(0);
@@ -217,9 +202,11 @@ void runcmd(char *s) {
 	if (rightpipe) {
 		wait(rightpipe);
 	}
-	debugf("command %s exit with return code %d\n", argv[0], exit_status);
+	debugf("command %s exit with return value %d\n", argv[0], exit_status);
 	exit();
 }
+
+
 
 void readline(char *buf, u_int n) {
 	int r;

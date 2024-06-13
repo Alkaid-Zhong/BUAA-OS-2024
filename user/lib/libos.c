@@ -10,6 +10,8 @@ void exit(void) {
 	close_all();
 #endif
 
+	debugf("lib main returned, pid: %d, return value: %d\n", env->env_id, exit_status);
+	syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
 	syscall_env_destroy(0);
 	user_panic("unreachable code");
 }
@@ -24,8 +26,6 @@ void libmain(int argc, char **argv) {
 	// call user main routine
 	debugf("lib main called, pid: %d\n", env->env_id);
 	exit_status = main(argc, argv);
-	debugf("lib main returned, pid: %d, return value: %d\n", env->env_id, exit_status);
-	syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
 
 	// exit gracefully
 	exit();
