@@ -204,6 +204,7 @@ int runcmd(char *s) {
 		wait(rightpipe);
 	}
 	debugf("command %s exit with return value %d\n", argv[0], exit_status);
+	close_all();
 	return exit_status;
 	// exit();
 }
