@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
             for (i = 0; i <= len; i++) {
                 if (path[i] == '/' || path[i] == '\0') {
                     sub_path[i] = '\0';
-                    create(path, FTYPE_DIR);
+                    create(sub_path, FTYPE_DIR);
                 }
                 sub_path[i] = path[i];
             }
