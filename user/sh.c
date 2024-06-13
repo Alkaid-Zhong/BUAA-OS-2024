@@ -211,7 +211,7 @@ int runcmd(char *s) {
 
 void runcmd_conditional(char *s) {
 	char *bg = s;
-	char *cmd_buf[1024];
+	char cmd_buf[1024];
 	int cmd_buf_len = 0;
 	char op;
 	int r;
