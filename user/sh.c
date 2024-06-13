@@ -191,7 +191,7 @@ int runcmd(char *s) {
 
 	close_all();
 
-	int exit_status = 0;
+	int exit_status = -1;
 
 	if (child >= 0) {
 		syscall_ipc_recv(0);
