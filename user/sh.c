@@ -218,7 +218,7 @@ int runcmd_conditional(char *s) {
 			cmd_buf[cmd_buf_len] = '\0';
 
 			exit_status = runcmd(cmd_buf);
-			debugf("command %s returned with return value %d\n", cmd_buf, exit_status);
+			debugf("in || command %s returned with return value %d\n", cmd_buf, exit_status);
 
 			cmd_buf_len = 0;
 			s += 2;
@@ -226,7 +226,7 @@ int runcmd_conditional(char *s) {
 			cmd_buf[cmd_buf_len] = '\0';
 
 			exit_status = runcmd(cmd_buf);
-			debugf("command %s returned with return value %d\n", cmd_buf, exit_status);
+			debugf("in && command %s returned with return value %d\n", cmd_buf, exit_status);
 
 			cmd_buf_len = 0;
 			s += 2;
@@ -237,7 +237,7 @@ int runcmd_conditional(char *s) {
 	}
 	cmd_buf[cmd_buf_len] = '\0';
 	exit_status = runcmd(cmd_buf);
-	debugf("command %s returned with return value %d\n", cmd_buf, exit_status);
+	debugf("in __ command %s returned with return value %d\n", cmd_buf, exit_status);
 	return exit_status;
 }
 
