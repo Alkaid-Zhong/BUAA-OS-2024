@@ -223,11 +223,13 @@ void runcmd_conditional(char *s) {
 				cmd_buf[cmd_buf_len] = '\0';
 				op = '|';
 				s += 2;
+				cmd_buf_len = 0;
 				break;
 			} else if (*s == '&' && *(s+1) == '&') {
 				cmd_buf[cmd_buf_len] = '\0';
 				op = '&';
 				s += 2;
+				cmd_buf_len = 0;
 				break;
 			} else {
 				cmd_buf[cmd_buf_len++] = *s;
