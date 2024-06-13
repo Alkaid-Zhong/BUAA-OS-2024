@@ -213,6 +213,7 @@ void runcmd_conditional(char *s) {
 	char cmd_buf[1024];
 	int cmd_buf_len = 0;
 	char op;
+	char last_op = 0;
 	int r;
 	int exit_status;
 
@@ -239,19 +240,27 @@ void runcmd_conditional(char *s) {
 		}
 		debugf("running cmd: %s, op %c\n", cmd_buf, op);
 
-		if ((r = fork()) < 0) {
-			user_panic("fork: %d", r);
+		if (last_op == 0 || 
+		    (last_op == '&' && exit_status == 0) ||
+			(last_op == '|' && exit_status == 1)) {
+
+			if ((r = fork()) < 0) {
+				user_panic("fork: %d", r);
+			}
+			if (r == 0) {
+				exit_status = runcmd(cmd_buf);
+				syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
+				exit();
+			} else {
+				syscall_ipc_recv(0);
+				exit_status = env->env_ipc_value;
+				wait(r);
+				debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
+			}
+
 		}
-		if (r == 0) {
-			exit_status = runcmd(cmd_buf);
-			syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
-			exit();
-		} else {
-			syscall_ipc_recv(0);
-			exit_status = env->env_ipc_value;
-			wait(r);
-			debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
-		}
+
+		last_op = op;
 
 		if (op == '\0') {
 			break;
