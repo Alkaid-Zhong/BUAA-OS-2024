@@ -244,7 +244,7 @@ void runcmd_conditional(char *s) {
 			user_panic("fork: %d", r);
 		}
 		if (r == 0) {
-			exit_status = runcmd(buf);
+			exit_status = runcmd(cmd_buf);
 			syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
 			exit();
 		} else {
