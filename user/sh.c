@@ -228,6 +228,7 @@ void runcmd_conditional(char *s) {
 			} else {
 				cmd_buf[cmd_buf_len++] = *s;
 				cmd_buf[cmd_buf_len] = '\0';
+				s++;
 			}
 		}
 		debugf("running cmd: %s, op %c\n", cmd_buf, op);
