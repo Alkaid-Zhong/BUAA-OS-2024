@@ -39,14 +39,14 @@ int _gettoken(char *s, char **p1, char **p2) {
 		int t = *s;
 		*p1 = s;
 		*s++ = 0;
-		if (t == *s) { // is && or ||
-			*s++ = 0;
-			if (t == '|') {
-				return 'o';
-			} else if (t == '&') {
-				return 'a';
-			}
-		}
+		// if (t == *s) { // is && or ||
+		// 	*s++ = 0;
+		// 	if (t == '|') {
+		// 		return 'o';
+		// 	} else if (t == '&') {
+		// 		return 'a';
+		// 	}
+		// }
 		*p2 = s;
 		return t;
 	}
