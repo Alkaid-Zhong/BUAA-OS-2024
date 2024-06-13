@@ -183,9 +183,13 @@ int runcmd(char *s) {
 		char cmd_b[1024];
 		int cmd_len = strlen(argv[0]);
 		strcpy(cmd_b, argv[0]);
-		cmd_b[cmd_len] = '.';
-		cmd_b[cmd_len + 1] = 'b';
-		cmd_b[cmd_len + 2] = '\0';
+		if (cmd_b[cmd_len - 1] == 'b' && cmd_b[cmd_len - 2] == '.') {
+			cmd_b[cmd_len - 2] = '\0';
+		} else {
+			cmd_b[cmd_len] = '.';
+			cmd_b[cmd_len + 1] = 'b';
+			cmd_b[cmd_len + 2] = '\0';
+		}
 		child = spawn(cmd_b, argv);
 	}
 
