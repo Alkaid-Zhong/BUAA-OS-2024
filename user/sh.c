@@ -212,36 +212,45 @@ int runcmd_conditional(char *s) {
 	char cmd_buf[1024];
 	int cmd_buf_len = 0;
 
-	int exit_status = -1;
+	int exit_status = 0;
+	char last_condition = 0;
 	while(*s) {
+		char condition = 0;
 		if (*s == '|' && *(s+1) == '|') {
-			cmd_buf[cmd_buf_len] = '\0';
-			char tmp[1024];
-			strcpy(tmp, cmd_buf);
-			exit_status = runcmd(cmd_buf);
-			debugf("in || command %s returned with return value %d\n", tmp, exit_status);
-
 			cmd_buf_len = 0;
 			s += 2;
+			condition = '|';
 		} else if (*s == '&' && *(s+1) == '&') {
-			cmd_buf[cmd_buf_len] = '\0';
-			char tmp[1024];
-			strcpy(tmp, cmd_buf);
-			exit_status = runcmd(cmd_buf);
-			debugf("in || command %s returned with return value %d\n", tmp, exit_status);
-
 			cmd_buf_len = 0;
 			s += 2;
+			condition = '&';
 		} else {
 			cmd_buf[cmd_buf_len++] = *s;
 			s++;
+			continue;
 		}
+		cmd_buf[cmd_buf_len] = '\0';
+		char tmp[1024];
+		strcpy(tmp, cmd_buf);
+
+		if (last_condition == 0 || 
+		    (last_condition == '&' && exit_status == 0) || 
+			(last_condition == '|' && exit_status != 0)) {
+			exit_status = runcmd(cmd_buf);
+			debugf("command %s returned with return value %d\n", tmp, exit_status);
+		}
+
+		last_condition = condition;
 	}
 	cmd_buf[cmd_buf_len] = '\0';
 	char tmp[1024];
 	strcpy(tmp, cmd_buf);
-	exit_status = runcmd(cmd_buf);
-	debugf("in || command %s returned with return value %d\n", tmp, exit_status);
+	if (last_condition == 0 || 
+		(last_condition == '&' && exit_status == 0) || 
+		(last_condition == '|' && exit_status != 0)) {
+		exit_status = runcmd(cmd_buf);
+		debugf("command %s returned with return value %d\n", tmp, exit_status);
+	}
 	return exit_status;
 }
 
