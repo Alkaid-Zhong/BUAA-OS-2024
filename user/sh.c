@@ -217,12 +217,8 @@ int runcmd_conditional(char *s) {
 	while(*s) {
 		char condition = 0;
 		if (*s == '|' && *(s+1) == '|') {
-			cmd_buf_len = 0;
-			s += 2;
 			condition = '|';
 		} else if (*s == '&' && *(s+1) == '&') {
-			cmd_buf_len = 0;
-			s += 2;
 			condition = '&';
 		} else {
 			cmd_buf[cmd_buf_len++] = *s;
@@ -240,6 +236,8 @@ int runcmd_conditional(char *s) {
 			debugf("command %s returned with return value %d\n", tmp, exit_status);
 		}
 
+		cmd_buf_len = 0;
+		s += 2;
 		last_condition = condition;
 	}
 	cmd_buf[cmd_buf_len] = '\0';
