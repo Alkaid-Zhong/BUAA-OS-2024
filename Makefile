@@ -31,7 +31,7 @@ objects                 := $(addsuffix /*.o, $(modules)) $(addsuffix /*.x, $(use
 modules                 += $(user_modules)
 
 CFLAGS                  += -DLAB=$(shell echo $(lab) | cut -f1 -d_)
-QEMU_FLAGS              += -cpu 4Kc -m 64 -nographic -M malta \
+QEMU_FLAGS              += -cpu 4Kc -m 128 -nographic -M malta \
 						$(shell [ -f '$(user_disk)' ] && echo '-drive id=ide0,file=$(user_disk),if=ide,format=raw') \
 						$(shell [ -f '$(empty_disk)' ] && echo '-drive id=ide1,file=$(empty_disk),if=ide,format=raw') \
 						-no-reboot
