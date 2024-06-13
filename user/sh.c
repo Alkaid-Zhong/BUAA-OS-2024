@@ -189,7 +189,12 @@ void runcmd(char *s) {
 	}
 
 	close_all();
+
+	int exit_status;
+
 	if (child >= 0) {
+		syscall_ipc_recv(0);
+		exit_status = env->env_ipc_value;
 		wait(child);
 	} else {
 		debugf("spawn %s: %d\n", argv[0], child);

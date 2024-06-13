@@ -18,8 +18,6 @@ void exit(void) __attribute__((noreturn));
 
 extern const volatile struct Env *env;
 
-extern int exit_status;
-
 #define USED(x) (void)(x)
 
 // debugf
