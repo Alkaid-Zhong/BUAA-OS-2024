@@ -208,39 +208,29 @@ int runcmd(char *s) {
 	// exit();
 }
 
-char* getNextCmdAndOp(char *s, char **cmd_buf, char *op) {
-	int len = 0;
-	while(*s) {
-		if (*s == '|' && *(s+1) == '|') {
-			*cmd_buf[len] = '\0';
-			*op = '|';
-			return s + 2;
-		} else if (*s == '&' && *(s+1) == '&') {
-			*cmd_buf[len] = '\0';
-			*op = '&';
-			return s + 2;
-		} else {
-			*cmd_buf[len++] = *s;
-			s++;
-			*cmd_buf[len] = '\0';
-		}
-		debugf("%s\n", *cmd_buf);
-	}
-	*cmd_buf[len] = '\0';
-	*op = '\0';
-	return s;
-}
 
 void runcmd_conditional(char *s) {
-	debugf("running conditionally: %s\n", s);
 	char *bg = s;
 	char *cmd_buf[1024];
+	int cmd_buf_len = 0;
 	char op;
 	int r;
 	int exit_status;
+
 	while(1) {
-		bg = getNextCmdAndOp(bg, &cmd_buf, &op);
-		debugf("cmd: %s, op: %c\n", cmd_buf, op);
+		while(*s) {
+			if (*s == '|' && *(s+1) == '|') {
+				cmd_buf[cmd_buf_len] = '\0';
+				op = '|';
+			} else if (*s == '&' && *(s+1) == '&') {
+				cmd_buf[cmd_buf_len] = '\0';
+				op = '&';
+			} else {
+				cmd_buf[cmd_buf_len++] = *s;
+				cmd_buf[cmd_buf_len] = '\0';
+			}
+		}
+		debugf("running cmd: %s, op %c\n", cmd_buf, op);
 
 		if ((r = fork()) < 0) {
 			user_panic("fork: %d", r);
