@@ -165,6 +165,8 @@ int parsecmd(char **argv, int *rightpipe) {
 	return argc;
 }
 
+extern int exit_status;
+
 void runcmd(char *s) {
 	gettoken(s, 0);
 
@@ -197,6 +199,7 @@ void runcmd(char *s) {
 	if (rightpipe) {
 		wait(rightpipe);
 	}
+	debugf("command %s exit with return code %d\n", argv[0], exit_status);
 	exit();
 }
 
