@@ -208,7 +208,7 @@ int runcmd(char *s) {
 }
 
 int runcmd_conditional(char *s) {
-	char *cmd_buf[MAXARGS];
+	char cmd_buf[1024];
 	int cmd_buf_len = 0;
 
 	while(*s) {
