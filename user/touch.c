@@ -1,4 +1,15 @@
 #include <lib.h>
 int main(int argc, char **argv) {
-    return 0;
+    if (argc != 2) {
+        debugf("touch.c: use touch <filename>\n");
+        return 0;
+    }
+    int r = open(argv[1], O_RDONLY);
+    if (r >= 0) {
+        printf("file %s exists\n", argv[1]);
+        close(r);
+        return 0;
+    } else {
+        return 0;
+    }
 }
