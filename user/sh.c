@@ -222,7 +222,9 @@ char* getNextCmdAndOp(char *s, char **cmd_buf, char *op) {
 		} else {
 			*cmd_buf[len++] = *s;
 			s++;
+			*cmd_buf[len] = '\0';
 		}
+		debugf("%s\n", *cmd_buf);
 	}
 	*cmd_buf[len] = '\0';
 	*op = '\0';
