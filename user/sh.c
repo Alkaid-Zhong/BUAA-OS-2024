@@ -232,6 +232,7 @@ char* getNextCmdAndOp(char *s, char **cmd_buf, char *op) {
 }
 
 void runcmd_conditional(char *s) {
+	debugf("running conditionally: %s\n", s);
 	char *bg = s;
 	char *cmd_buf[1024];
 	char op;
