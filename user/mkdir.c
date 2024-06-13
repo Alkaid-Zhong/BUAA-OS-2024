@@ -17,10 +17,20 @@ int main(int argc, char **argv) {
         close(r);
         return 0;
     } else {
-        if ((r = create(argv[1], FTYPE_DIR)) != 0) {
+        if ((r = create(path, FTYPE_DIR)) != 0) {
             if (!p) {
                 printf("mkdir: cannot create directory '%s': No such file or directory\n", path);
                 return 1;
+            }
+            char sub_path[1024];
+            int len = strlen(path);
+            int i;
+            for (i = 0; i <= len; i++) {
+                if (path[i] == '/' || path[i] == '\0') {
+                    sub_path[i] = '\0';
+                    create(path, FTYPE_DIR);
+                }
+                sub_path[i] = path[i];
             }
         }
     }
