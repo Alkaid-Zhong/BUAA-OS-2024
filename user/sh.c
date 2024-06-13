@@ -218,17 +218,21 @@ int runcmd_conditional(char *s) {
 			return runcmd(cmd_buf);
 
 			cmd_buf_len = 0;
+			s += 2;
 		} else if (*s == '&' && *(s+1) == '&') {
 			cmd_buf[cmd_buf_len] = '\0';
 
 			return runcmd(cmd_buf);
 
 			cmd_buf_len = 0;
+			s += 2;
 		} else {
 			cmd_buf[cmd_buf_len++] = *s;
 			s++;
 		}
 	}
+	cmd_buf[cmd_buf_len] = '\0';
+	debugf("command %s\n", cmd_buf);
 	return runcmd(cmd_buf);
 }
 
