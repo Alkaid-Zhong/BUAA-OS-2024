@@ -242,7 +242,7 @@ void runcmd_conditional(char *s) {
 
 		if (last_op == 0 || 
 		    (last_op == '&' && exit_status == 0) ||
-			(last_op == '|' && exit_status == 1)) {
+			(last_op == '|' && exit_status != 0)) {
 
 			if ((r = fork()) < 0) {
 				user_panic("fork: %d", r);
