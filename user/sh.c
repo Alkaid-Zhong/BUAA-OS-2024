@@ -237,6 +237,7 @@ void runcmd_conditional(char *s) {
 	int exit_status;
 	while(1) {
 		bg = getNextCmdAndOp(bg, &cmd_buf, &op);
+		debugf("cmd: %s, op: %c\n", cmd_buf, op);
 
 		if ((r = fork()) < 0) {
 			user_panic("fork: %d", r);
