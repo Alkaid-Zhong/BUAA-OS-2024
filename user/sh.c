@@ -203,7 +203,6 @@ int runcmd(char *s) {
 	if (rightpipe) {
 		wait(rightpipe);
 	}
-	debugf("command %s exit with return value %d\n", argv[0], exit_status);
 	return exit_status;
 	// exit();
 }
@@ -249,6 +248,7 @@ void runcmd_conditional(char *s) {
 			}
 			if (r == 0) {
 				exit_status = runcmd(cmd_buf);
+				debugf("command %s exit with return value %d\n", argv[0], exit_status);
 				syscall_ipc_try_send(env->env_parent_id, 2024, 0, 0);
 				syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
 				exit();
