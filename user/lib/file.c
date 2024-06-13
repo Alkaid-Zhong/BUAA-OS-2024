@@ -261,3 +261,7 @@ int remove(const char *path) {
 int sync(void) {
 	return fsipc_sync();
 }
+
+int create(const char* path, int type) {
+	return fsipc_create(path, type);
+}

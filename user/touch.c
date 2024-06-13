@@ -10,6 +10,10 @@ int main(int argc, char **argv) {
         close(r);
         return 0;
     } else {
+        if ((r = create(argv[1], FTYPE_REG)) != 0) {
+            debugf("touch: cannot touch \'%s\': No such file or directory", argv[1]);
+            return 1;
+        }
         return 0;
     }
 }
