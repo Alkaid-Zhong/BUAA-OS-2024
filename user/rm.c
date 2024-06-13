@@ -19,5 +19,26 @@ int main(int argc, char **argv) {
         return 0;
     }
     int r = open(path, O_RDONLY);
+    if (r != 0) {
+        if (!f) {
+            printf("rm: cannot remove '%s': No such file or directory\n", path);
+        }
+        return 1;
+    }
+    struct Fd *fd;
+    fd_lookup(r, &fd);
+    struct Filefd *ffd = (struct Filefd*) fd;
+    int type = ffd->f_file.f_type;
+
+    if (type == FTYPE_REG) {
+        remove(path);
+    } else {
+        if (!r) {
+            printf("rm: cannot remove '%s': Is a directory\n", path)
+            return 1;
+        }
+        remove(path);
+    }
+
     return 0;
 }
