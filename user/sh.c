@@ -142,6 +142,7 @@ int parsecmd(char **argv, int *rightpipe) {
 		char *buf;
 		int fd, r;
 		int type = getNextToken(0, &buf);
+		int p[2];
 		switch (type) {
 		case TOKEN_EOF:
 			return argc;
@@ -180,7 +181,6 @@ int parsecmd(char **argv, int *rightpipe) {
 			close(fd);
 			break;
 		case TOKEN_PIPE:
-			int p[2];
 			pipe(p);
 			*rightpipe = fork();
 			if (*rightpipe == 0) {
@@ -209,7 +209,7 @@ int runcmd(char *s) {
 	int rightpipe = 0;
 	int argc = parsecmd(argv, &rightpipe);
 	if (argc == 0) {
-		return;
+		return 0;
 	}
 	argv[argc] = 0;
 
