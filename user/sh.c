@@ -2,7 +2,7 @@
 #include <lib.h>
 
 #define WHITESPACE " \t\r\n"
-#define SYMBOLS "<|>&;()"
+#define SYMBOLS "<|>&;()`#\""
 
 /* Overview:
  *   Parse the next token from the string at s.
@@ -19,48 +19,119 @@
  *   The buffer is modified to turn the spaces after words into zero bytes ('\0'), so that the
  *   returned token is a null-terminated string.
  */
-int _gettoken(char *s, char **p1, char **p2) {
-	*p1 = 0;
-	*p2 = 0;
-	if (s == 0) {
+
+#define TOKEN_EOF 0				// \0
+#define TOKEN_STDIN_REDIRECT 1	// <
+#define TOKEN_STDOUT_REDIRECT 2	// >
+#define TOKEN_PIPE 3			// |
+#define TOKEN_WORD 4			// word
+#define TOKEN_BACKQUOTE 5		// `
+#define TOKEN_COMMENT 6			// #
+#define TOKEN_SIMICOLON 7		// ;
+#define TOKEN_APPEND_REDIRECT 8	// >>
+#define TOKEN_QUOTATION 9		// "
+#define TOKEN_BACKGOUND_EXC 10	// &
+#define TOKEN_AND 11			// &&
+#define TOKEN_OR 12				// ||
+#define TOKEN_ERR -1			// error
+
+// return token type and set **begin and **end to the beginning and end of the token.
+int _getNextToken(char *cmd, char **begin, char **end) {
+	*begin = 0;
+	*end = 0;
+	// null cmd
+	if (cmd == 0) {
 		return 0;
 	}
-
-	while (strchr(WHITESPACE, *s)) {
-		*s++ = 0;
+	// skip leading whitespace
+	while (strchr(WHITESPACE, *cmd)) {
+		*cmd++ = 0;
 	}
-	if (*s == 0) {
-		return 0;
+	if (*cmd == 0) {
+		return TOKEN_EOF;
 	}
-
-	if (strchr(SYMBOLS, *s)) {
-		int t = *s;
-		*p1 = s;
-		*s++ = 0;
-		*p2 = s;
-		return t;
+	// check for special symbols
+	if (strchr(SYMBOLS, *cmd)) {
+		switch (*cmd) {
+		case '<':
+			*begin = cmd;
+			*end = cmd + 1;
+			return TOKEN_STDIN_REDIRECT;
+		case '>':
+			*begin = cmd;
+			if (cmd[1] == '>') {
+				*end = cmd + 2;
+				return TOKEN_APPEND_REDIRECT;
+			} else {
+				*end = cmd + 1;
+				return TOKEN_STDOUT_REDIRECT;
+			}
+		case '|':
+			*begin = cmd;
+			if (cmd[1] == '|') {
+				*end = cmd + 2;
+				return TOKEN_OR;
+			} else {
+				*end = cmd + 1;
+				return TOKEN_PIPE;
+			}
+		case '`':
+			*begin = cmd;
+			*end = cmd + 1;
+			return TOKEN_BACKQUOTE;
+		case '#':
+			*begin = cmd;
+			*end = cmd + 1;
+			return TOKEN_COMMENT;
+		case ';':
+			*begin = cmd;
+			*end = cmd + 1;
+			return TOKEN_SIMICOLON;
+		case '\"':
+			*begin = cmd;
+			*end = cmd + 1;
+			return TOKEN_QUOTATION;
+		case '&':
+			*begin = cmd;
+			if (cmd[1] == '&') {
+				*end = cmd + 2;
+				return TOKEN_AND;
+			} else {
+				*end = cmd + 1;
+				return TOKEN_BACKGOUND_EXC;
+			}
+		}
+		return TOKEN_ERR;
 	}
-
-	*p1 = s;
-	while (*s && !strchr(WHITESPACE SYMBOLS, *s)) {
-		s++;
+	// parse a word
+	*begin = cmd;
+	while (*cmd && !strchr(WHITESPACE SYMBOLS, *cmd)) {
+		cmd++;
 	}
-	*p2 = s;
-	return 'w';
+	*end = cmd;
+	return TOKEN_WORD;
 }
 
-int gettoken(char *s, char **p1) {
-	static int c, nc;
-	static char *np1, *np2;
+/*
+ * if cmd is null, return the next token in the current string.
+ * if cmd is not null, parse the string and return the next token.
+ */
 
-	if (s) {
-		nc = _gettoken(s, &np1, &np2);
-		return 0;
+int getNextToken(char *cmd, char **buf) {
+	
+	static int type, nextType;
+	static char *begin, *end;
+
+	if (cmd != 0) {
+		nextType = _getNextToken(cmd, &begin, &end);
+		return TOKEN_EOF;
+	} else {
+		type = nextType;
+		*buf = begin;
+		*end++ = 0;
+		nextType = _getNextToken(end, &begin, &end);
+		return type;
 	}
-	c = nc;
-	*p1 = np1;
-	nc = _gettoken(np2, &np1, &np2);
-	return c;
 }
 
 #define MAXARGS 128
@@ -68,76 +139,48 @@ int gettoken(char *s, char **p1) {
 int parsecmd(char **argv, int *rightpipe) {
 	int argc = 0;
 	while (1) {
-		char *t;
+		char *buf;
 		int fd, r;
-		int c = gettoken(0, &t);
-		switch (c) {
-		case 0:
+		int type = getNextToken(0, &buf);
+		switch (type) {
+		case TOKEN_EOF:
 			return argc;
-		case 'w':
+		case TOKEN_WORD:
 			if (argc >= MAXARGS) {
 				debugf("too many arguments\n");
 				exit();
 			}
-			argv[argc++] = t;
+			argv[argc++] = buf;
 			break;
-		case '<':
-			if (gettoken(0, &t) != 'w') {
+		case TOKEN_STDIN_REDIRECT:
+			if (getNextToken(0, &buf) != 'w') {
 				debugf("syntax error: < not followed by word\n");
 				exit();
 			}
-			// Open 't' for reading, dup it onto fd 0, and then close the original fd.
-			// If the 'open' function encounters an error,
-			// utilize 'debugf' to print relevant messages,
-			// and subsequently terminate the process using 'exit'.
-			/* Exercise 6.5: Your code here. (1/3) */
-			fd = open(t, O_RDONLY);
+			fd = open(buf, O_RDONLY);
 			if (fd < 0) {
-				debugf("open %s failed!\n", t);
+				debugf("open %s failed!\n", buf);
 				exit();
 			}
 			dup(fd, 0);
 			close(fd);
 
 			break;
-		case '>':
-			if (gettoken(0, &t) != 'w') {
+		case TOKEN_STDOUT_REDIRECT:
+			if (getNextToken(0, &buf) != 'w') {
 				debugf("syntax error: > not followed by word\n");
 				exit();
 			}
-			// Open 't' for writing, create it if not exist and trunc it if exist, dup
-			// it onto fd 1, and then close the original fd.
-			// If the 'open' function encounters an error,
-			// utilize 'debugf' to print relevant messages,
-			// and subsequently terminate the process using 'exit'.
-			/* Exercise 6.5: Your code here. (2/3) */
-			fd = open(t, O_WRONLY);
+			fd = open(buf, O_WRONLY);
 			if (fd < 0) {
-				debugf("open %s failed!\n", t);
+				debugf("open %s failed!\n", buf);
 				exit();
 			}
 			dup(fd, 1);
 			close(fd);
-
 			break;
-		case '|':;
-			/*
-			 * First, allocate a pipe.
-			 * Then fork, set '*rightpipe' to the returned child envid or zero.
-			 * The child runs the right side of the pipe:
-			 * - dup the read end of the pipe onto 0
-			 * - close the read end of the pipe
-			 * - close the write end of the pipe
-			 * - and 'return parsecmd(argv, rightpipe)' again, to parse the rest of the
-			 *   command line.
-			 * The parent runs the left side of the pipe:
-			 * - dup the write end of the pipe onto 1
-			 * - close the write end of the pipe
-			 * - close the read end of the pipe
-			 * - and 'return argc', to execute the left of the pipeline.
-			 */
+		case TOKEN_PIPE:
 			int p[2];
-			/* Exercise 6.5: Your code here. (3/3) */
 			pipe(p);
 			*rightpipe = fork();
 			if (*rightpipe == 0) {
@@ -151,9 +194,6 @@ int parsecmd(char **argv, int *rightpipe) {
 				close(p[0]);
 				return argc;
 			}
-
-			//user_panic("| not implemented");
-
 			break;
 		}
 	}
@@ -163,7 +203,7 @@ int parsecmd(char **argv, int *rightpipe) {
 
 int runcmd(char *s) {
 	// debugf("running command %s\n", s);
-	gettoken(s, 0);
+	getNextToken(s, 0);
 
 	char *argv[MAXARGS];
 	int rightpipe = 0;
