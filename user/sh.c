@@ -143,6 +143,7 @@ int parsecmd(char **argv, int *rightpipe) {
 		char *buf;
 		int fd, r;
 		int type = getNextToken(0, &buf);
+		debugf("type %d, buf %s\n", type, buf);
 		int p[2];
 		switch (type) {
 		case TOKEN_EOF:
