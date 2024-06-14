@@ -55,48 +55,59 @@ int _getNextToken(char *cmd, char **begin, char **end) {
 		switch (*cmd) {
 		case '<':
 			*begin = cmd;
+			cmd[0] = 0;
 			*end = cmd + 1;
 			return TOKEN_STDIN_REDIRECT;
 		case '>':
 			*begin = cmd;
 			if (cmd[1] == '>') {
+				cmd[1] = 0;
 				*end = cmd + 2;
 				return TOKEN_APPEND_REDIRECT;
 			} else {
+				cmd[0] = 0;
 				*end = cmd + 1;
 				return TOKEN_STDOUT_REDIRECT;
 			}
 		case '|':
 			*begin = cmd;
 			if (cmd[1] == '|') {
+				cmd[1] = 0;
 				*end = cmd + 2;
 				return TOKEN_OR;
 			} else {
+				cmd[0] = 0;
 				*end = cmd + 1;
 				return TOKEN_PIPE;
 			}
 		case '`':
 			*begin = cmd;
+			cmd[0] = 0;
 			*end = cmd + 1;
 			return TOKEN_BACKQUOTE;
 		case '#':
 			*begin = cmd;
+			cmd[0] = 0;
 			*end = cmd + 1;
 			return TOKEN_COMMENT;
 		case ';':
 			*begin = cmd;
+			cmd[0] = 0;
 			*end = cmd + 1;
 			return TOKEN_SIMICOLON;
 		case '\"':
 			*begin = cmd;
+			cmd[0] = 0;
 			*end = cmd + 1;
 			return TOKEN_QUOTATION;
 		case '&':
 			*begin = cmd;
 			if (cmd[1] == '&') {
+				cmd[1] = 0;
 				*end = cmd + 2;
 				return TOKEN_AND;
 			} else {
+				cmd[0] = 0;
 				*end = cmd + 1;
 				return TOKEN_BACKGOUND_EXC;
 			}
@@ -128,8 +139,6 @@ int getNextToken(char *cmd, char **buf) {
 	} else {
 		type = nextType;
 		*buf = begin;
-		*end = 0;
-		end++;
 		nextType = _getNextToken(end, &begin, &end);
 		return type;
 	}
