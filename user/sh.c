@@ -128,7 +128,8 @@ int getNextToken(char *cmd, char **buf) {
 	} else {
 		type = nextType;
 		*buf = begin;
-		*end++ = 0;
+		*end = 0;
+		end++;
 		nextType = _getNextToken(end, &begin, &end);
 		return type;
 	}
