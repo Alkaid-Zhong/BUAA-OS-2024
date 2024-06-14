@@ -198,6 +198,7 @@ int runcmd(char *s) {
 	int exit_status = -1;
 
 	if (child >= 0) {
+		debugf("child:%d\n", child);
 		syscall_ipc_recv(0);
 		wait(child);
 		exit_status = env->env_ipc_value;
