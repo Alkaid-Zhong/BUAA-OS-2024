@@ -29,7 +29,7 @@
 #define TOKEN_COMMENT 6			// #
 #define TOKEN_SIMICOLON 7		// ;
 #define TOKEN_APPEND_REDIRECT 8	// >>
-#define TOKEN_QUOTATION 9		// "
+//#define TOKEN_QUOTATION 9		// "
 #define TOKEN_BACKGOUND_EXC 10	// &
 #define TOKEN_AND 11			// &&
 #define TOKEN_OR 12				// ||
@@ -95,11 +95,11 @@ int _getNextToken(char **begin, char **end) {
 			cmd[0] = 0;
 			*end = cmd + 1;
 			return TOKEN_SIMICOLON;
-		case '\"':
-			*begin = cmd;
-			cmd[0] = 0;
-			*end = cmd + 1;
-			return TOKEN_QUOTATION;
+		// case '\"':
+		// 	*begin = cmd;
+		// 	cmd[0] = 0;
+		// 	*end = cmd + 1;
+		// 	return TOKEN_QUOTATION;
 		case '&':
 			*begin = cmd;
 			if (cmd[1] == '&') {
@@ -115,7 +115,19 @@ int _getNextToken(char **begin, char **end) {
 		return TOKEN_ERR;
 	}
 	// parse a word
-	*begin = cmd;
+	if (*cmd == '\"') { // parse a quoted word
+		*cmd = '\0';
+		cmd++;
+		*begin = cmd;
+		while (*cmd && *cmd != '\"') {
+			cmd++;
+		}
+		if (*cmd == '\"') {
+			cmd++;
+		}
+		*end = cmd;
+		return TOKEN_WORD;
+	}
 	while (*cmd && !strchr(WHITESPACE SYMBOLS, *cmd)) {
 		cmd++;
 	}
