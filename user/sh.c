@@ -191,6 +191,21 @@ int parsecmd(char **argv, int *rightpipe) {
 			dup(fd, 1);
 			close(fd);
 			break;
+		case TOKEN_APPEND_REDIRECT:
+			if (getNextToken(0, &buf) != TOKEN_WORD) {
+				debugf("syntax error: >> not followed by word\n");
+				exit();
+			}
+			fd = open(buf, O_WRONLY);
+			if (fd < 0) {
+				debugf("open %s failed!\n", buf);
+				exit();
+			}
+			struct Filefd *ffd = (struct Filefd *)fd;
+			((struct Fd*) fd)->fd_offset = ffd->f_file.f_size;
+			dup(fd, 1);
+			close(fd);
+			break;
 		case TOKEN_PIPE:
 			pipe(p);
 			*rightpipe = fork();
