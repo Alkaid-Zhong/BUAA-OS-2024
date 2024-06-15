@@ -201,9 +201,7 @@ int parsecmd(char **argv, int *rightpipe) {
 				debugf("open %s failed!\n", buf);
 				exit();
 			}
-			struct Fd *pfd = num2fd(fd);
-			struct Filefd *ffd = (struct Filefd *)fd;
-			pfd->fd_offset = ffd->f_file.f_size;
+			debugf("fd->fd_offset: %d\n", ((struct Fd*) fd)->fd_offset);
 			dup(fd, 1);
 			close(fd);
 			break;
