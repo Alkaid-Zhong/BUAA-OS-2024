@@ -274,9 +274,9 @@ int replaceBackquoteCommands(char *cmd) {
 }
 
 int runcmd(char *s) {
-	// debugf("running command %s\n", s);
 
 	replaceBackquoteCommands(s);
+	debugf("running command %s\n", s);
 
 	getNextToken(s, 0);
 
