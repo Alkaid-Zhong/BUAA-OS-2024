@@ -265,6 +265,9 @@ int replaceBackquoteCommands(char *cmd) {
         *begin = '\0'; // Terminate the string at the start of the backquote command
         *end = '\0'; // Terminate the backquote command
 
+		char temp_cmd[1024];
+		strcpy(temp_cmd, end + 1);
+
         // Execute the command and capture its output
         if (executeCommandAndCaptureOutput(begin + 1, output, sizeof(output)) == -1) {
             return -1;
@@ -274,7 +277,7 @@ int replaceBackquoteCommands(char *cmd) {
 
         // Concatenate the parts
         strcat(cmd, output);
-        strcat(cmd, end + 1);
+        strcat(cmd, temp_cmd);
     }
     return 0;
 }
