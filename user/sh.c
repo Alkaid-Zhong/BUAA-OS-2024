@@ -404,6 +404,8 @@ void runcmd_conditional(char *s) {
 	int r;
 	int exit_status = 0;
 
+	debugf("conditional running cmd: %s\n", s);
+
 	while(1) {
 		op = '\0';
 		int in_quotes = 0, in_backquotes = 0;
