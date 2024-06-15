@@ -156,7 +156,7 @@ int parsecmd(char **argv, int *rightpipe) {
 		int fd, r;
 		int type = getNextToken(0, &buf);
 		int p[2];
-		char backquote_buf[1024];
+		char backquote_buf[1024] = {0};
 		switch (type) {
 		case TOKEN_EOF:
 			return argc;
@@ -209,7 +209,10 @@ int parsecmd(char **argv, int *rightpipe) {
 			}
 			break;
 		case TOKEN_BACKQUOTE:
-			
+			while (getNextToken(0, &buf) != TOKEN_BACKQUOTE) {
+				strcat(backquote_buf, buf);
+			}
+			debugf("backquote: %s\n", backquote_buf);
 			break;
 		}
 	}
