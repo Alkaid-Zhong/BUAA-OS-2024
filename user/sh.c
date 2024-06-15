@@ -243,7 +243,7 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
 				break;
 			}
 		}
-		debugf("`parent` read output: %s\n", output);
+		debugf("`parent` read output: <%s>\n", output);
 
         close(pipefd[0]);
         wait(pid);
@@ -282,7 +282,7 @@ int replaceBackquoteCommands(char *cmd) {
 int runcmd(char *s) {
 
 	replaceBackquoteCommands(s);
-	debugf("rumcmd: running command %s\n", s);
+	debugf("runcmd: running command %s\n", s);
 
 	getNextToken(s, 0);
 
