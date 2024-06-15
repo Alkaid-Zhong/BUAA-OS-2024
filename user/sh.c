@@ -224,12 +224,13 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
     }
 
     if (pid == 0) { // Child process
-        close(pipefd[0]); // Close read end
-        dup(pipefd[1], 1); // Redirect stdout to write end of pipe
+        dup(pipefd[0], 0);
+        close(pipefd[0]);
         close(pipefd[1]);
-
+		debugf("`child` running command %s\n", cmd);
 		runcmd_conditional(cmd);
     } else { // Parent process
+		dup(pipefd[1], 1);
         close(pipefd[1]); // Close write end
         int bytesRead = read(pipefd[0], output, maxLen - 1);
         if (bytesRead >= 0) {
