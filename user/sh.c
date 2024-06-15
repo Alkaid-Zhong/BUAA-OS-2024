@@ -339,9 +339,13 @@ int replaceBackquoteCommands(char *cmd) {
 
 		// debugf("backquote output: <%s>\n", output);
 
+		debugf("original cmd: <%s>\n", cmd);
+
         // Concatenate the parts
         strcat(cmd, output);
         strcat(cmd, temp_cmd);
+
+		debugf("new cmd: <%s>\n", cmd);
     }
     return 0;
 }
