@@ -36,18 +36,18 @@
 #define TOKEN_ERR -1			// error
 
 // return token type and set **begin and **end to the beginning and end of the token.
-int _getNextToken(char *cmd, char **begin, char **end) {
-	*begin = 0;
-	*end = 0;
+int _getNextToken(char **begin, char **end) {
+	char *cmd = *begin;
 	// null cmd
 	if (cmd == 0) {
-		return 0;
+		return TOKEN_EOF;
 	}
 	// skip leading whitespace
 	while (strchr(WHITESPACE, *cmd)) {
 		*cmd++ = 0;
 	}
-	if (*cmd == 0) {
+	if (*cmd == '\0') {
+		*begin = *end = cmd;
 		return TOKEN_EOF;
 	}
 	// check for special symbols
@@ -61,7 +61,7 @@ int _getNextToken(char *cmd, char **begin, char **end) {
 		case '>':
 			*begin = cmd;
 			if (cmd[1] == '>') {
-				cmd[1] = 0;
+				cmd[0] = cmd[1] = 0;
 				*end = cmd + 2;
 				return TOKEN_APPEND_REDIRECT;
 			} else {
@@ -72,7 +72,7 @@ int _getNextToken(char *cmd, char **begin, char **end) {
 		case '|':
 			*begin = cmd;
 			if (cmd[1] == '|') {
-				cmd[1] = 0;
+				cmd[0] = cmd[1] = 0;
 				*end = cmd + 2;
 				return TOKEN_OR;
 			} else {
@@ -103,7 +103,7 @@ int _getNextToken(char *cmd, char **begin, char **end) {
 		case '&':
 			*begin = cmd;
 			if (cmd[1] == '&') {
-				cmd[1] = 0;
+				cmd[0] = cmd[1] = 0;
 				*end = cmd + 2;
 				return TOKEN_AND;
 			} else {
@@ -130,20 +130,21 @@ int _getNextToken(char *cmd, char **begin, char **end) {
 
 int getNextToken(char *cmd, char **buf) {
 	
-	static int type, nextType;
-	static char *begin, *end;
+	static int type;
+	static char *begin, *last_end;
 
 	debugf("getNextToken\n");
 
-	if (cmd != 0) {
-		nextType = _getNextToken(cmd, &begin, &end);
-		debugf("next token type %d, begin %s, end %s\n", nextType, begin, end);
+	if (cmd != 0) { // set new cmd
+		begin = cmd;
+		last_end = cmd;
+		debugf("set command: <%s>\n", begin);
 		return TOKEN_EOF;
-	} else {
-		type = nextType;
+	} else { // get next token
+		begin = last_end;
+		type = _getNextToken(&begin, &last_end);
 		*buf = begin;
-		nextType = _getNextToken(end, &begin, &end);
-		debugf("token type %d, begin %s, end %s\n", type, begin, end);
+		debugf("token type %d, begin <%s>, end <%s>\n", type, begin, last_end);
 		return type;
 	}
 }
