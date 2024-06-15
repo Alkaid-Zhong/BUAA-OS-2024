@@ -405,6 +405,12 @@ void runcmd_conditional(char *s) {
 				s += 2;
 				cmd_buf_len = 0;
 				break;
+			} else if (*s == ';') {
+				cmd_buf[cmd_buf_len] = '\0';
+				op = ';';
+				s += 1;
+				cmd_buf_len = 0;
+				break;
 			} else {
 				cmd_buf[cmd_buf_len++] = *s;
 				cmd_buf[cmd_buf_len] = '\0';
@@ -415,7 +421,8 @@ void runcmd_conditional(char *s) {
 
 		if (last_op == 0 || 
 		    (last_op == '&' && exit_status == 0) ||
-			(last_op == '|' && exit_status != 0)) {
+			(last_op == '|' && exit_status != 0) ||
+			(last_op == ';')) {
 
 			if ((r = fork()) < 0) {
 				user_panic("fork: %d", r);
