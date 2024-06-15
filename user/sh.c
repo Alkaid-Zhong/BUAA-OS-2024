@@ -337,7 +337,7 @@ int replaceBackquoteCommands(char *cmd) {
             return -1;
         }
 
-		// debugf("backquote output: <%s>\n", output);
+		debugf("backquote output: <%s>\n", output);
 
 		debugf("original cmd: <%s>\n", cmd);
 
