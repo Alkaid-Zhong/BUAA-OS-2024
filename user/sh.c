@@ -498,6 +498,7 @@ int main(int argc, char **argv) {
 				if (history_cmd[0] == '\0') {
 					break;
 				}
+				debugf("history: %s, fd %d\n", history_cmd, history_fd);
 				fprintf(history_fd, "%s\n", history_cmd);
 			}
 			close(history_fd);
