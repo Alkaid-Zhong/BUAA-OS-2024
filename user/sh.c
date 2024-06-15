@@ -224,17 +224,26 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
     }
 
     if (pid == 0) { // Child process
-        close(pipefd[0]);
         dup(pipefd[1], 1);
         close(pipefd[1]);
+        close(pipefd[0]);
 		debugf("`child` running command %s\n", cmd);
 		runcmd_conditional(cmd);
 		debugf("`child` finished running command %s\n", cmd);
     } else { // Parent process
-        close(pipefd[1]); // Close write end
+        close(pipefd[1]);
 
 		char buf[1024];
-        readline(output, 1024);
+
+		int r;
+		for (int i = 0; i < 1024; i++) {
+			if ((r = read(0, buf + i, 1)) != 1) {
+				if (r < 0) {
+					debugf("read error: %d\n", r);
+				}
+				break;
+			}
+		}
 		debugf("`parent` read output: %s\n", output);
 
         close(pipefd[0]);
