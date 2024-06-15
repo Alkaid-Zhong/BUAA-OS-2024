@@ -231,7 +231,6 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
 		runcmd_conditional(cmd);
 		debugf("`child` finished running command %s\n", cmd);
     } else { // Parent process
-		dup(pipefd[0], 0);
         close(pipefd[1]); // Close write end
 
 		char buf[1024];
