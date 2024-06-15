@@ -227,9 +227,9 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
         dup(pipefd[1], 1);
         close(pipefd[1]);
         close(pipefd[0]);
-		debugf("`child` running command %s\n", cmd);
+		// debugf("`child` running command %s\n", cmd);
 		runcmd_conditional(cmd);
-		debugf("`child` finished running command %s\n", cmd);
+		// debugf("`child` finished running command %s\n", cmd);
     } else { // Parent process
 		// dup(pipefd[0], 0);
         close(pipefd[1]);
@@ -243,7 +243,7 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
 				break;
 			}
 		}
-		debugf("`parent` read output: <%s>\n", output);
+		// debugf("`parent` read output: <%s>\n", output);
 
         close(pipefd[0]);
         wait(pid);
@@ -273,7 +273,7 @@ int replaceBackquoteCommands(char *cmd) {
             return -1;
         }
 
-		debugf("backquote output: <%s>\n", output);
+		// debugf("backquote output: <%s>\n", output);
 
         // Concatenate the parts
         strcat(cmd, output);
@@ -285,7 +285,7 @@ int replaceBackquoteCommands(char *cmd) {
 int runcmd(char *s) {
 
 	replaceBackquoteCommands(s);
-	debugf("runcmd: running command %s\n", s);
+	// debugf("runcmd: running command %s\n", s);
 
 	getNextToken(s, 0);
 
