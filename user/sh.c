@@ -138,13 +138,11 @@ int getNextToken(char *cmd, char **buf) {
 	if (cmd != 0) { // set new cmd
 		begin = cmd;
 		last_end = cmd;
-		debugf("set command: <%s>\n", begin);
 		return TOKEN_EOF;
 	} else { // get next token
 		begin = last_end;
 		type = _getNextToken(&begin, &last_end);
 		*buf = begin;
-		debugf("token type %d, begin <%s>, end <%s>\n", type, begin, last_end);
 		return type;
 	}
 }
@@ -157,7 +155,6 @@ int parsecmd(char **argv, int *rightpipe) {
 		char *buf;
 		int fd, r;
 		int type = getNextToken(0, &buf);
-		debugf("type %d, buf %s\n", type, buf);
 		int p[2];
 		switch (type) {
 		case TOKEN_EOF:
@@ -181,7 +178,6 @@ int parsecmd(char **argv, int *rightpipe) {
 			}
 			dup(fd, 0);
 			close(fd);
-
 			break;
 		case TOKEN_STDOUT_REDIRECT:
 			if (getNextToken(0, &buf) != 'w') {
@@ -218,7 +214,7 @@ int parsecmd(char **argv, int *rightpipe) {
 }
 
 int runcmd(char *s) {
-	debugf("running command %s\n", s);
+	// debugf("running command %s\n", s);
 	getNextToken(s, 0);
 
 	char *argv[MAXARGS];
@@ -259,7 +255,7 @@ int runcmd(char *s) {
 	if (rightpipe) {
 		wait(rightpipe);
 	}
-	debugf("command %s exit with return value %d\n", argv[0], exit_status);
+	// debugf("command %s exit with return value %d\n", argv[0], exit_status);
 	return exit_status;
 	// exit();
 }
@@ -294,7 +290,7 @@ void runcmd_conditional(char *s) {
 				s++;
 			}
 		}
-		debugf("running cmd: %s, op %c\n", cmd_buf, op);
+		// debugf("conditional running cmd: %s, op %c\n", cmd_buf, op);
 
 		if (last_op == 0 || 
 		    (last_op == '&' && exit_status == 0) ||
@@ -311,7 +307,7 @@ void runcmd_conditional(char *s) {
 				syscall_ipc_recv(0);
 				wait(r);
 				exit_status = env->env_ipc_value;
-				debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
+				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
 			}
 
 		}
