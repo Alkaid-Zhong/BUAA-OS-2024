@@ -166,7 +166,7 @@ int parsecmd(char **argv, int *rightpipe) {
 			argv[argc++] = buf;
 			break;
 		case TOKEN_STDIN_REDIRECT:
-			if (getNextToken(0, &buf) != 'w') {
+			if (getNextToken(0, &buf) != TOKEN_WORD) {
 				debugf("syntax error: < not followed by word\n");
 				exit();
 			}
@@ -179,7 +179,7 @@ int parsecmd(char **argv, int *rightpipe) {
 			close(fd);
 			break;
 		case TOKEN_STDOUT_REDIRECT:
-			if (getNextToken(0, &buf) != 'w') {
+			if (getNextToken(0, &buf) != TOKEN_WORD) {
 				debugf("syntax error: > not followed by word\n");
 				exit();
 			}
