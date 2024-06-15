@@ -411,11 +411,10 @@ void readline(char *buf, u_int n) {
 			} else {
 				i = -1;
 			}
-			if (i >= 0) {
+			if (i >= -1) {
 				if (buf[i] != '\b') {
 					printf("\b");
-				}
-				else {
+				} else {
 					printf("\b \b");
 				}
 			}
