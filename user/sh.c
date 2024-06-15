@@ -229,12 +229,14 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
         close(pipefd[1]);
 		debugf("`child` running command %s\n", cmd);
 		runcmd_conditional(cmd);
+		debugf("`child` finished running command %s\n", cmd);
     } else { // Parent process
 		dup(pipefd[0], 0);
         close(pipefd[1]); // Close write end
 
 		char buf[1024];
         while (read(pipefd[0], buf, sizeof(buf)) > 0) {
+			debugf("`parent` read %d bytes, buffer: %s\n", strlen(buf), buf);
             strcat(output, buf);
         }
 
