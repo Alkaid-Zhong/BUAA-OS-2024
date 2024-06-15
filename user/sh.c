@@ -114,7 +114,6 @@ int _getNextToken(char **begin, char **end) {
 		}
 		return TOKEN_ERR;
 	}
-	// parse a word
 	if (*cmd == '\"') { // parse a quoted word
 		*cmd = '\0';
 		cmd++;
@@ -123,11 +122,13 @@ int _getNextToken(char **begin, char **end) {
 			cmd++;
 		}
 		if (*cmd == '\"') {
+			*cmd = '\0';
 			cmd++;
 		}
 		*end = cmd;
 		return TOKEN_WORD;
 	}
+	// parse a word
 	while (*cmd && !strchr(WHITESPACE SYMBOLS, *cmd)) {
 		cmd++;
 	}
