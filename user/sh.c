@@ -193,6 +193,7 @@ int parsecmd(char **argv, int *rightpipe) {
 			close(fd);
 			break;
 		case TOKEN_STDOUT_REDIRECT:
+		case TOKEN_APPEND_REDIRECT:
 			if (getNextToken(0, &buf) != TOKEN_WORD) {
 				debugf("syntax error: > not followed by word\n");
 				exit();
@@ -209,22 +210,22 @@ int parsecmd(char **argv, int *rightpipe) {
 			dup(fd, 1);
 			close(fd);
 			break;
-		case TOKEN_APPEND_REDIRECT:
-			if (getNextToken(0, &buf) != TOKEN_WORD) {
-				debugf("syntax error: >> not followed by word\n");
-				exit();
-			}
-			fd = open(buf, O_WRONLY);
-			if (fd < 0) {
-				create(buf, FTYPE_REG);
-				fd = open(buf, O_WRONLY);
-			}
-			struct Fd *fd_struct = (struct Fd*) num2fd(fd);
-			struct Filefd *ffd = (struct Filefd*) fd_struct;
-			fd_struct->fd_offset = ffd->f_file.f_size;
-			dup(fd, 1);
-			close(fd);
-			break;
+		// case TOKEN_APPEND_REDIRECT:
+		// 	if (getNextToken(0, &buf) != TOKEN_WORD) {
+		// 		debugf("syntax error: >> not followed by word\n");
+		// 		exit();
+		// 	}
+		// 	fd = open(buf, O_WRONLY);
+		// 	if (fd < 0) {
+		// 		create(buf, FTYPE_REG);
+		// 		fd = open(buf, O_WRONLY);
+		// 	}
+		// 	struct Fd *fd_struct = (struct Fd*) num2fd(fd);
+		// 	struct Filefd *ffd = (struct Filefd*) fd_struct;
+		// 	fd_struct->fd_offset = ffd->f_file.f_size;
+		// 	dup(fd, 1);
+		// 	close(fd);
+		// 	break;
 		case TOKEN_PIPE:
 			pipe(p);
 			*rightpipe = fork();
