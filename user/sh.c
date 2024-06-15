@@ -2,7 +2,7 @@
 #include <lib.h>
 
 #define WHITESPACE " \t\r\n"
-#define SYMBOLS "<|>&;()`#\""
+#define SYMBOLS "<|>&;()`#"
 
 /* Overview:
  *   Parse the next token from the string at s.
