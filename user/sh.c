@@ -236,6 +236,7 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
         if (bytesRead >= 0) {
             output[bytesRead] = '\0'; // Null-terminate the output
         }
+		debugf("`parent` read %d bytes from pipe, output: %s\n", bytesRead, output);
         close(pipefd[0]);
         wait(pid);
     }
