@@ -413,8 +413,6 @@ void readline(char *buf, u_int n) {
 			}
 			if (buf[i] != '\b') {
 				printf("\b");
-			} else {
-				printf("\b \b");
 			}
 		}
 		if (buf[i] == '\r' || buf[i] == '\n') {
@@ -467,6 +465,19 @@ int main(int argc, char **argv) {
 		}
 		user_assert(r == 0);
 	}
+
+	int history_fd = -1;
+	if ((history_fd = open("/.mosh_history", O_RDWR)) < 0) {
+		if ((r = create("/.mosh_history", FTYPE_REG)) != 0) {
+			debugf("canbit create /.mosh_history: %d\n", r);
+            return 1;
+        }
+        history_fd = open("/.mosh_history", O_RDWR);
+	}
+	const int HISTORY_SIZE = 20;
+	char history_buf[20][1024];
+	int history_index = 0;
+
 	for (;;) {
 		if (interactive) {
 			printf("\n$ ");
@@ -479,6 +490,18 @@ int main(int argc, char **argv) {
 		if (echocmds) {
 			printf("# %s\n", buf);
 		}
+		// history
+		strcpy(history_buf[history_index], buf);
+		history_index = (history_index + 1) % HISTORY_SIZE;
+		int i;
+		for (i = 0; i < HISTORY_SIZE; i++) {
+			char *history_cmd = history_buf[(history_index + i) % HISTORY_SIZE];
+			if (history_cmd[0] == '\0') {
+				break;
+			}
+			fprintf(history_fd, "%s\n", history_cmd);
+		}
+
 		runcmd_conditional(buf);
 		// if ((r = fork()) < 0) {
 		// 	user_panic("fork: %d", r);
