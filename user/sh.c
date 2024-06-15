@@ -225,18 +225,10 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
 
     if (pid == 0) { // Child process
         close(pipefd[0]); // Close read end
-        dup2(pipefd[1], 1); // Redirect stdout to write end of pipe
+        dup(pipefd[1], 1); // Redirect stdout to write end of pipe
         close(pipefd[1]);
 
-        char *argv[MAXARGS];
-        getNextToken(cmd, 0);
-        int argc = parsecmd(argv, 0);
-        if (argc == 0) {
-            exit();
-        }
-        argv[argc] = 0;
-        exec(argv[0], argv);
-        exit();
+		runcmd_conditional(cmd);
     } else { // Parent process
         close(pipefd[1]); // Close write end
         int bytesRead = read(pipefd[0], output, maxLen - 1);
