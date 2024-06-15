@@ -292,8 +292,35 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
 int replaceBackquoteCommands(char *cmd) {
     char *begin, *end;
     char output[1024];
-    while ((begin = strchr(cmd, '`')) != NULL) {
-        end = strchr(begin + 1, '`');
+	
+	while (*begin != '\0') {
+		int in_quotes = 0;
+
+		begin = 0;
+		while(*cmd != '\0') {
+			if (*cmd == '\"') {
+				in_quotes = !in_quotes;
+			}
+			if (*cmd == '`' && !in_quotes) {
+				begin = cmd;
+				break;
+			}
+			cmd++;
+		}
+		if (begin == NULL) {
+			return 0; // No backquote found
+		}
+		end = 0;
+		while(*cmd != '\0') {
+			if (*cmd == '\"') {
+				in_quotes = !in_quotes;
+			}
+			if (*cmd == '`' && !in_quotes) {
+				end = cmd;
+				break;
+			}
+			cmd++;
+		}
         if (end == NULL) {
             return -1; // Syntax error: unmatched backquote
         }
