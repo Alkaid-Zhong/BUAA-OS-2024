@@ -373,6 +373,7 @@ int runcmd(char *s) {
 	int argc = parsecmd(argv, &rightpipe);
 	int background_exc = 0;
 	if (argv[argc - 1][0] == '\0') {
+		debugf("background execution: <%s>\n", argv[0]);
 		background_exc = 1;
 		argc--;
 	}
