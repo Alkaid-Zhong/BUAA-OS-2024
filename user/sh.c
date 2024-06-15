@@ -147,8 +147,6 @@ int getNextToken(char *cmd, char **buf) {
 
 #define MAXARGS 128
 
-int runcmd(char *s);
-
 int parsecmd(char **argv, int *rightpipe) {
 	int argc = 0;
 	while (1) {
@@ -208,20 +206,79 @@ int parsecmd(char **argv, int *rightpipe) {
 				return argc;
 			}
 			break;
-		case TOKEN_BACKQUOTE:
-			while (getNextToken(0, &buf) != TOKEN_BACKQUOTE) {
-				strcat(backquote_buf, buf);
-			}
-			debugf("backquote: %s\n", backquote_buf);
-			break;
 		}
 	}
 
 	return argc;
 }
 
+int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
+    int pipefd[2];
+    if (pipe(pipefd) == -1) {
+        return -1;
+    }
+
+    int pid = fork();
+    if (pid == -1) {
+        return -1;
+    }
+
+    if (pid == 0) { // Child process
+        close(pipefd[0]); // Close read end
+        dup2(pipefd[1], 1); // Redirect stdout to write end of pipe
+        close(pipefd[1]);
+
+        char *argv[MAXARGS];
+        getNextToken(cmd, 0);
+        int argc = parsecmd(argv, 0);
+        if (argc == 0) {
+            exit();
+        }
+        argv[argc] = 0;
+        exec(argv[0], argv);
+        exit();
+    } else { // Parent process
+        close(pipefd[1]); // Close write end
+        int bytesRead = read(pipefd[0], output, maxLen - 1);
+        if (bytesRead >= 0) {
+            output[bytesRead] = '\0'; // Null-terminate the output
+        }
+        close(pipefd[0]);
+        wait(pid);
+    }
+
+    return 0;
+}
+
+int replaceBackquoteCommands(char *cmd) {
+    char *begin, *end;
+    char output[1024];
+    while ((begin = strchr(cmd, '`')) != NULL) {
+        end = strchr(begin + 1, '`');
+        if (end == NULL) {
+            return -1; // Syntax error: unmatched backquote
+        }
+
+        *begin = '\0'; // Terminate the string at the start of the backquote command
+        *end = '\0'; // Terminate the backquote command
+
+        // Execute the command and capture its output
+        if (executeCommandAndCaptureOutput(begin + 1, output, sizeof(output)) == -1) {
+            return -1;
+        }
+
+        // Concatenate the parts
+        strcat(cmd, output);
+        strcat(cmd, end + 1);
+    }
+    return 0;
+}
+
 int runcmd(char *s) {
 	// debugf("running command %s\n", s);
+
+	replaceBackquoteCommands(s);
+
 	getNextToken(s, 0);
 
 	char *argv[MAXARGS];
