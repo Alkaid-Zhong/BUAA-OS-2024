@@ -147,6 +147,8 @@ int getNextToken(char *cmd, char **buf) {
 
 #define MAXARGS 128
 
+int runcmd(char *s);
+
 int parsecmd(char **argv, int *rightpipe) {
 	int argc = 0;
 	while (1) {
@@ -154,6 +156,7 @@ int parsecmd(char **argv, int *rightpipe) {
 		int fd, r;
 		int type = getNextToken(0, &buf);
 		int p[2];
+		char backquote_buf[1024];
 		switch (type) {
 		case TOKEN_EOF:
 			return argc;
@@ -204,6 +207,9 @@ int parsecmd(char **argv, int *rightpipe) {
 				close(p[0]);
 				return argc;
 			}
+			break;
+		case TOKEN_BACKQUOTE:
+			
 			break;
 		}
 	}
