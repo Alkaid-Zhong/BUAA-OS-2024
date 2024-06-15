@@ -406,24 +406,27 @@ void runcmd_conditional(char *s) {
 
 	while(1) {
 		op = '\0';
-		int in_quotes = 0;
+		int in_quotes = 0, in_backquotes = 0;
 		while(*s) {
-			if (*s == '\"' || *s == '`') {
+			if (*s == '\"') {
 				in_quotes = !in_quotes;
 			}
-			if (*s == '|' && *(s+1) == '|' && !in_quotes) {
+			if (*s == '`') {
+				in_backquotes = !in_backquotes;
+			}
+			if (*s == '|' && *(s+1) == '|' && !in_quotes && !in_backquotes) {
 				cmd_buf[cmd_buf_len] = '\0';
 				op = '|';
 				s += 2;
 				cmd_buf_len = 0;
 				break;
-			} else if (*s == '&' && *(s+1) == '&' && !in_quotes) {
+			} else if (*s == '&' && *(s+1) == '&' && !in_quotes && !in_backquotes) {
 				cmd_buf[cmd_buf_len] = '\0';
 				op = '&';
 				s += 2;
 				cmd_buf_len = 0;
 				break;
-			} else if (*s == ';' && !in_quotes) {
+			} else if (*s == ';' && !in_quotes && !in_backquotes) {
 				cmd_buf[cmd_buf_len] = '\0';
 				op = ';';
 				s += 1;
