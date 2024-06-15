@@ -303,8 +303,8 @@ int runcmd(char *s) {
 	if (strcmp(argv[0], "history") == 0) {
 		int history_fd = -1;
 		if ((history_fd = open("/.mosh_history", O_RDONLY)) < 0) {
-			debugf("canbit open /.mosh_history: %d\n", history_fd);
-			return 0;
+			debugf("can not open /.mosh_history: %d\n", history_fd);
+			return 1;
 		}
 		char history_buf[1024];
 		int i = 0;
@@ -317,7 +317,7 @@ int runcmd(char *s) {
 				break;
 			}
 		}
-		print("%s", history_buf);
+		printf("%s", history_buf);
 		close(history_fd);
 		return 0;
 	}
