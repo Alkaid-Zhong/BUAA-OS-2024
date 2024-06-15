@@ -319,6 +319,10 @@ int runcmd(char *s) {
 		}
 		printf("%s", history_buf);
 		close(history_fd);
+		close_all();
+		if (rightpipe) {
+			wait(rightpipe);
+		}
 		return 0;
 	}
 
