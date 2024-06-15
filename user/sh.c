@@ -224,8 +224,8 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
     }
 
     if (pid == 0) { // Child process
-        dup(pipefd[1], 1);
         close(pipefd[0]);
+        dup(pipefd[1], 1);
         close(pipefd[1]);
 		debugf("`child` running command %s\n", cmd);
 		runcmd_conditional(cmd);
