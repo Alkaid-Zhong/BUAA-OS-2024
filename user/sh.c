@@ -202,8 +202,8 @@ int parsecmd(char **argv, int *rightpipe) {
 			}
 			fd = open(buf, O_WRONLY);
 			if (fd < 0) {
-				debugf("open %s failed!\n", buf);
-				exit();
+				create(buf, FTYPE_REG);
+				fd = open(buf, O_WRONLY);
 			}
 			struct Fd *fd_struct = (struct Fd*) num2fd(fd);
 			struct Filefd *ffd = (struct Filefd*) fd_struct;
