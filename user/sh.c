@@ -293,7 +293,7 @@ int replaceBackquoteCommands(char *cmd) {
     char *begin, *end;
     char output[1024];
 
-	debugf("replaceBackquoteCommands: <%s>\n", cmd);
+	// debugf("replaceBackquoteCommands: <%s>\n", cmd);
 	
 	while (1) {
 		char *t = cmd;
@@ -341,15 +341,15 @@ int replaceBackquoteCommands(char *cmd) {
             return -1;
         }
 
-		debugf("backquote output: <%s>\n", output);
+		// debugf("backquote output: <%s>\n", output);
 
-		debugf("original cmd: <%s>\n", cmd);
+		// debugf("original cmd: <%s>\n", cmd);
 
         // Concatenate the parts
         strcat(cmd, output);
         strcat(cmd, temp_cmd);
 
-		debugf("new cmd: <%s>\n", cmd);
+		// debugf("new cmd: <%s>\n", cmd);
     }
     return 0;
 }
