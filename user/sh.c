@@ -234,10 +234,7 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
         close(pipefd[1]); // Close write end
 
 		char buf[1024];
-        while (read(pipefd[0], buf, 512) > 0) {
-			debugf("`parent` read %d bytes, buffer: <%s>\n", strlen(buf), buf);
-            strcat(output, buf);
-        }
+        readline(output, 1024);
 		debugf("`parent` read output: %s\n", output);
 
         close(pipefd[0]);
