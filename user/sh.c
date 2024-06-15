@@ -470,9 +470,7 @@ int main(int argc, char **argv) {
 	if ((history_fd = open("/.mosh_history", O_RDWR)) < 0) {
 		if ((r = create("/.mosh_history", FTYPE_REG)) != 0) {
 			debugf("canbit create /.mosh_history: %d\n", r);
-            return 1;
         }
-        history_fd = open("/.mosh_history", O_RDWR);
 	}
 	const int HISTORY_SIZE = 20;
 	char history_buf[20][1024];
@@ -493,13 +491,16 @@ int main(int argc, char **argv) {
 		// history
 		strcpy(history_buf[history_index], buf);
 		history_index = (history_index + 1) % HISTORY_SIZE;
-		int i;
-		for (i = 0; i < HISTORY_SIZE; i++) {
-			char *history_cmd = history_buf[(history_index + i) % HISTORY_SIZE];
-			if (history_cmd[0] == '\0') {
-				break;
+		if ((history_fd = open("/.mosh_history", O_RDWR)) >= 0) {
+			int i;
+			for (i = 0; i < HISTORY_SIZE; i++) {
+				char *history_cmd = history_buf[(history_index + i) % HISTORY_SIZE];
+				if (history_cmd[0] == '\0') {
+					break;
+				}
+				fprintf(history_fd, "%s\n", history_cmd);
 			}
-			fprintf(history_fd, "%s\n", history_cmd);
+			close(history_fd);
 		}
 
 		runcmd_conditional(buf);
