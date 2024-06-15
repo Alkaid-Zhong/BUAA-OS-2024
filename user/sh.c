@@ -233,16 +233,17 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
     } else { // Parent process
 		dup(pipefd[0], 0);
         close(pipefd[1]); // Close write end
-        close(pipefd[0]);
-        wait(pid);
 
 		char buf[1024];
-        while (read(pipefd[0], buf, sizeof(buf)) > 0) {
+        while (read(pipefd[0], buf, 512) > 0) {
 			debugf("`parent` read %d bytes, buffer: %s\n", strlen(buf), buf);
             strcat(output, buf);
         }
-
 		debugf("`parent` read output: %s\n", output);
+
+        close(pipefd[0]);
+        wait(pid);
+
     }
 
     return 0;
