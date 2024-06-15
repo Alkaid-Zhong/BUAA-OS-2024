@@ -172,6 +172,13 @@ int parsecmd(char **argv, int *rightpipe) {
 		switch (type) {
 		case TOKEN_EOF:
 			return argc;
+		case TOKEN_BACKGOUND_EXC:
+			if (argc == 0) {
+				debugf("syntax error: & not followed by command\n");
+				exit();
+			}
+			argv[argc++] = "\0";
+			return argc;
 		case TOKEN_WORD:
 			if (argc >= MAXARGS) {
 				debugf("too many arguments\n");
@@ -364,6 +371,11 @@ int runcmd(char *s) {
 	char *argv[MAXARGS];
 	int rightpipe = 0;
 	int argc = parsecmd(argv, &rightpipe);
+	int background_exc = 0;
+	if (argv[argc - 1][0] == '\0') {
+		background_exc = 1;
+		argc--;
+	}
 	if (argc == 0) {
 		return 0;
 	}
@@ -418,7 +430,9 @@ int runcmd(char *s) {
 
 	if (child >= 0) {
 		syscall_ipc_recv(0);
-		wait(child);
+		if (!background_exc) {
+			wait(child);
+		}
 		exit_status = env->env_ipc_value;
 	} else {
 		debugf("spawn %s: %d\n", argv[0], child);
