@@ -432,7 +432,7 @@ void runcmd_conditional(char *s) {
 	int r;
 	int exit_status = 0;
 
-	debugf("conditional running cmd: %s\n", s);
+	// debugf("conditional running cmd: %s\n", s);
 
 	while(1) {
 		op = '\0';
@@ -468,7 +468,7 @@ void runcmd_conditional(char *s) {
 				s++;
 			}
 		}
-		debugf("conditional running cmd: %s, op %c\n", cmd_buf, op);
+		// debugf("conditional running cmd: %s, op %c\n", cmd_buf, op);
 
 		if (last_op == 0 || 
 		    (last_op == '&' && exit_status == 0) ||
