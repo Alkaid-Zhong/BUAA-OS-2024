@@ -299,6 +299,29 @@ int runcmd(char *s) {
 	}
 	argv[argc] = 0;
 
+	// history
+	if (strcmp(argv[0], "history") == 0) {
+		int history_fd = -1;
+		if ((history_fd = open("/.mosh_history", O_RDONLY)) < 0) {
+			debugf("canbit open /.mosh_history: %d\n", history_fd);
+			return 0;
+		}
+		char history_buf[1024];
+		int i = 0;
+		int r;
+		for (int i = 0; i < 1024; i++) {
+			if ((r = read(history_fd, history_buf + i, 1)) != 1) {
+				if (r < 0) {
+					debugf("read error: %d\n", r);
+				}
+				break;
+			}
+		}
+		print("%s", history_buf);
+		close(history_fd);
+		return 0;
+	}
+
 	int child = spawn(argv[0], argv);
 
 	if (child < 0) {
@@ -498,7 +521,6 @@ int main(int argc, char **argv) {
 				if (history_cmd[0] == '\0') {
 					continue;
 				}
-				debugf("history: %s, fd %d\n", history_cmd, history_fd);
 				fprintf(history_fd, "%s\n", history_cmd);
 			}
 			close(history_fd);
