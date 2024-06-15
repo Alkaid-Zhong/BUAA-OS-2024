@@ -412,7 +412,7 @@ void readline(char *buf, u_int n) {
 				i = -1;
 			}
 			if (buf[i] != '\b') {
-				printf("\b");
+				printf(" \b\b");
 			}
 		}
 		if (buf[i] == '\r' || buf[i] == '\n') {
