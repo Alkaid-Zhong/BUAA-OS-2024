@@ -292,6 +292,8 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
 int replaceBackquoteCommands(char *cmd) {
     char *begin, *end;
     char output[1024];
+
+	debugf("replaceBackquoteCommands: <%s>\n", cmd);
 	
 	while (1) {
 		char *t = cmd;
