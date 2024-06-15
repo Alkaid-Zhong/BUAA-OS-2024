@@ -133,8 +133,6 @@ int getNextToken(char *cmd, char **buf) {
 	static int type;
 	static char *begin, *last_end;
 
-	debugf("getNextToken\n");
-
 	if (cmd != 0) { // set new cmd
 		begin = cmd;
 		last_end = cmd;
