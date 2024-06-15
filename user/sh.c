@@ -411,7 +411,7 @@ void runcmd_conditional(char *s) {
 			if (*s == '\"') {
 				in_quotes = !in_quotes;
 			}
-			if (*s == '`') {
+			if (*s == '`' && !in_quotes) {
 				in_backquotes = !in_backquotes;
 			}
 			if (*s == '|' && *(s+1) == '|' && !in_quotes && !in_backquotes) {
