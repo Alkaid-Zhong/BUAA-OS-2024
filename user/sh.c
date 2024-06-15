@@ -183,6 +183,7 @@ int parsecmd(char **argv, int *rightpipe) {
 				debugf("syntax error: > not followed by word\n");
 				exit();
 			}
+			remove(buf);
 			fd = open(buf, O_WRONLY);
 			if (fd < 0) {
 				debugf("open %s failed!\n", buf);
