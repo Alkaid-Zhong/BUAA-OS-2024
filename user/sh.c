@@ -206,6 +206,8 @@ int parsecmd(char **argv, int *rightpipe) {
 				return argc;
 			}
 			break;
+		case TOKEN_COMMENT:
+			return argc;
 		}
 	}
 
