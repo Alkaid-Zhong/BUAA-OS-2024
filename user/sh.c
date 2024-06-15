@@ -235,7 +235,7 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
 
 		char buf[1024];
         while (read(pipefd[0], buf, 512) > 0) {
-			debugf("`parent` read %d bytes, buffer: %s\n", strlen(buf), buf);
+			debugf("`parent` read %d bytes, buffer: <%s>\n", strlen(buf), buf);
             strcat(output, buf);
         }
 		debugf("`parent` read output: %s\n", output);
@@ -265,6 +265,8 @@ int replaceBackquoteCommands(char *cmd) {
             return -1;
         }
 
+		debugf("backquote output: <%s>\n", output);
+
         // Concatenate the parts
         strcat(cmd, output);
         strcat(cmd, end + 1);
@@ -275,7 +277,7 @@ int replaceBackquoteCommands(char *cmd) {
 int runcmd(char *s) {
 
 	replaceBackquoteCommands(s);
-	debugf("running command %s\n", s);
+	debugf("rumcmd: running command %s\n", s);
 
 	getNextToken(s, 0);
 
