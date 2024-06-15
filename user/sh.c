@@ -293,33 +293,34 @@ int replaceBackquoteCommands(char *cmd) {
     char *begin, *end;
     char output[1024];
 	
-	while (*begin != '\0') {
+	while (1) {
+		char *t = cmd;
 		int in_quotes = 0;
 
 		begin = 0;
-		while(*cmd != '\0') {
-			if (*cmd == '\"') {
+		while(*t != '\0') {
+			if (*t == '\"') {
 				in_quotes = !in_quotes;
 			}
-			if (*cmd == '`' && !in_quotes) {
-				begin = cmd;
+			if (*t == '`' && !in_quotes) {
+				begin = t;
 				break;
 			}
-			cmd++;
+			t++;
 		}
 		if (begin == NULL) {
 			return 0; // No backquote found
 		}
 		end = 0;
-		while(*cmd != '\0') {
-			if (*cmd == '\"') {
+		while(*t != '\0') {
+			if (*t == '\"') {
 				in_quotes = !in_quotes;
 			}
-			if (*cmd == '`' && !in_quotes) {
-				end = cmd;
+			if (*t == '`' && !in_quotes) {
+				end = t;
 				break;
 			}
-			cmd++;
+			t++;
 		}
         if (end == NULL) {
             return -1; // Syntax error: unmatched backquote
