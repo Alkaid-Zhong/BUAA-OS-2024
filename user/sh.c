@@ -496,7 +496,7 @@ int main(int argc, char **argv) {
 			for (i = 0; i < HISTORY_SIZE; i++) {
 				char *history_cmd = history_buf[(history_index + i) % HISTORY_SIZE];
 				if (history_cmd[0] == '\0') {
-					break;
+					continue;
 				}
 				debugf("history: %s, fd %d\n", history_cmd, history_fd);
 				fprintf(history_fd, "%s\n", history_cmd);
