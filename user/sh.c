@@ -114,26 +114,27 @@ int _getNextToken(char **begin, char **end) {
 		}
 		return TOKEN_ERR;
 	}
-	// if (*cmd == '\"') { // parse a quoted word
-	// 	*cmd = '\0';
-	// 	cmd++;
-	// 	*begin = cmd;
-	// 	while (*cmd && *cmd != '\"') {
-	// 		cmd++;
-	// 	}
-	// 	if (*cmd == '\"') {
-	// 		*cmd = '\0';
-	// 		cmd++;
-	// 	}
-	// 	*end = cmd;
-	// 	return TOKEN_WORD;
-	// }
-	// parse a word
-	while (*cmd && !strchr(WHITESPACE SYMBOLS, *cmd)) {
+	if (*cmd == '\"') { // parse a quoted word
+		*cmd = '\0';
 		cmd++;
+		*begin = cmd;
+		while (*cmd && *cmd != '\"') {
+			cmd++;
+		}
+		if (*cmd == '\"') {
+			*cmd = '\0';
+			cmd++;
+		}
+		*end = cmd;
+		return TOKEN_WORD;
+	} else { // parse a word
+		*begin = cmd;
+		while (*cmd && !strchr(WHITESPACE SYMBOLS, *cmd)) {
+			cmd++;
+		}
+		*end = cmd;
+		return TOKEN_WORD;
 	}
-	*end = cmd;
-	return TOKEN_WORD;
 }
 
 /*
