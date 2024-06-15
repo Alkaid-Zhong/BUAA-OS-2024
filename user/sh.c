@@ -202,7 +202,7 @@ int parsecmd(char **argv, int *rightpipe) {
 				exit();
 			}
 			struct Fd *fd_struct = (struct Fd*) num2fd(fd);
-			struct FileFd *ffd = (struct FileFd*) fd_struct;
+			struct Filefd *ffd = (struct Filefd*) fd_struct;
 			fd_struct->fd_offset = ffd->f_file.f_size;
 			debugf("fd->fd_offset: %d\n", ((struct Fd*) num2fd(fd))->fd_offset);
 			dup(fd, 1);
