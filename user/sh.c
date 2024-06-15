@@ -234,11 +234,9 @@ int executeCommandAndCaptureOutput(char *cmd, char *output, int maxLen) {
 		// dup(pipefd[0], 0);
         close(pipefd[1]);
 
-		char buf[1024];
-
 		int r;
-		for (int i = 0; i < 1024; i++) {
-			if ((r = read(pipefd[0], buf + i, 1)) != 1) {
+		for (int i = 0; i < maxLen; i++) {
+			if ((r = read(pipefd[0], output + i, 1)) != 1) {
 				if (r < 0) {
 					debugf("read error: %d\n", r);
 				}
