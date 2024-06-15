@@ -306,6 +306,7 @@ int replaceBackquoteCommands(char *cmd) {
 			}
 			if (*t == '`' && !in_quotes) {
 				begin = t;
+				t++;
 				break;
 			}
 			t++;
@@ -320,6 +321,7 @@ int replaceBackquoteCommands(char *cmd) {
 			}
 			if (*t == '`' && !in_quotes) {
 				end = t;
+				t++;
 				break;
 			}
 			t++;
