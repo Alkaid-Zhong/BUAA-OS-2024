@@ -433,11 +433,13 @@ int runcmd(char *s, int background_exc) {
 		while (*s) {
 			job_id = job_id * 10 + (*s++ - '0');
 		}
-		if (job_id >= job_counts) {
+		if (job_id > job_counts) {
 			user_panic("kill: job (%d) do not exist\n", job_id);
 		}
 		if (jobs[job_id].status == 0) {
 			syscall_env_destroy_force(jobs[job_id].pid);
+			jobs[job_id].status = 1;
+			syscall_yield();
 		} else {
 			user_panic("kill: (0x%08x) not running\n", jobs[job_id].pid);
 		}
