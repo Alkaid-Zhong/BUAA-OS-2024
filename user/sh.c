@@ -533,7 +533,9 @@ void runcmd_conditional(char *s) {
 			}
 			if (r == 0) {
 				exit_status = runcmd(cmd_buf, background_exc);
-				syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
+				if (!background_exc) {
+					syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
+				}
 				exit();
 			} else {
 				if (!background_exc) {
@@ -541,6 +543,11 @@ void runcmd_conditional(char *s) {
 					wait(r);
 					exit_status = env->env_ipc_value;
 				} else {
+					jobs[job_counts].job_id = job_counts + 1;
+					jobs[job_counts].pid = r;
+					strcpy(jobs[job_counts].cmd, cmd_buf);
+					jobs[job_counts].status = 0;
+					job_counts++;
 					exit_status = 0;
 				}
 				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
