@@ -452,13 +452,15 @@ int runcmd(char *s, int background_exc) {
 			jobs[job_counts].status = 0;
 			job_counts++;
 			exit_status = 0;
-			debugf("child: %08x, env_status: %d\n", child, envs[ENVX(child)].env_status);
 			syscall_yield();
-			debugf("child: %08x, env_status: %d\n", child, envs[ENVX(child)].env_status);
 		}
 		syscall_ipc_recv(0);
-		wait(child);
-		exit_status = env->env_ipc_value;
+		if (!background_exc) {
+			wait(child);
+			exit_status = env->env_ipc_value;
+		} else {
+			exit_status = 0;
+		}
 	} else {
 		debugf("spawn %s: %d\n", argv[0], child);
 	}
