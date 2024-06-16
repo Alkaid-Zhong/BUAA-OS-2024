@@ -9,6 +9,7 @@ enum {
 	SYS_getenvid,
 	SYS_yield,
 	SYS_env_destroy,
+	SYS_env_destroy_force,
 	SYS_set_tlb_mod_entry,
 	SYS_mem_alloc,
 	SYS_mem_map,

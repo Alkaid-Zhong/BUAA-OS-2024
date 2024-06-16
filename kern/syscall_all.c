@@ -83,6 +83,15 @@ int sys_env_destroy(u_int envid) {
 	return 0;
 }
 
+int sys_env_destroy_force(u_int envid) {
+	struct Env *e;
+	try(envid2env(envid, &e, 0));
+
+	printk("[%08x] destroying %08x\n", curenv->env_id, e->env_id);
+	env_destroy(e);
+	return 0;
+}
+
 /* Overview:
  *   Register the entry of user space TLB Mod handler of 'envid'.
  *
@@ -540,6 +549,7 @@ void *syscall_table[MAX_SYSNO] = {
     [SYS_getenvid] = sys_getenvid,
     [SYS_yield] = sys_yield,
     [SYS_env_destroy] = sys_env_destroy,
+    [SYS_env_destroy_force] = sys_env_destroy_force,
     [SYS_set_tlb_mod_entry] = sys_set_tlb_mod_entry,
     [SYS_mem_alloc] = sys_mem_alloc,
     [SYS_mem_map] = sys_mem_map,

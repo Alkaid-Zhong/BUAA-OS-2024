@@ -24,6 +24,10 @@ int syscall_env_destroy(u_int envid) {
 	return msyscall(SYS_env_destroy, envid);
 }
 
+int syscall_env_destroy_force(u_int envid) {
+	return msyscall(SYS_env_destroy_force, envid);
+}
+
 int syscall_set_tlb_mod_entry(u_int envid, void (*func)(struct Trapframe *)) {
 	return msyscall(SYS_set_tlb_mod_entry, envid, func);
 }
