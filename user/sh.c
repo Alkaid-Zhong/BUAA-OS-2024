@@ -551,7 +551,10 @@ void runcmd_conditional(char *s) {
 					jobs[job_counts].status = 0;
 					job_counts++;
 					exit_status = 0;
+					debugf("child: %08x, env_status: %d\n", r, envs[ENVX(r)].env_status);
 					syscall_yield();
+					debugf("child: %08x, env_status: %d\n", r, envs[ENVX(r)].env_status);
+
 				}
 				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
 			}
