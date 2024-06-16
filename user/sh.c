@@ -493,6 +493,8 @@ void runcmd_conditional(char *s) {
 				
 			char *argv[MAXARGS];
 			int rightpipe = 0;
+			
+			getNextToken(cmd_buf, 0);
 			int argc = parsecmd(argv, &rightpipe);
 			int background_exc = 0;
 			if (argc == 0) {
@@ -504,7 +506,7 @@ void runcmd_conditional(char *s) {
 			}
 			argv[argc] = 0;
 			if (background_exc) {
-				
+
 			} else {
 				if ((r = fork()) < 0) {
 					user_panic("fork: %d", r);
