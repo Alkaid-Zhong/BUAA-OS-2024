@@ -517,7 +517,6 @@ void runcmd_conditional(char *s) {
 			}
 			if (background_exc) {
 				debugf("background exc: %s\n", cmd_buf);
-				cmd_buf[i] = '\0';
 			}
 
 			if ((r = fork()) < 0) {
