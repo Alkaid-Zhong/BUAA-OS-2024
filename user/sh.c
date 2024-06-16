@@ -438,8 +438,8 @@ int runcmd(char *s, int background_exc) {
 		for (i = 0; i < job_counts; i++) {
 			if (jobs[i].job_id == job_id) {
 				if (jobs[i].status == 0) {
+					debugf("kill job (%d) (0x%08x)\n", jobs[i].job_id, jobs[i].pid);
 					syscall_env_destroy(jobs[i].pid);
-					syscall_yield();
 					killed = 1;
 					break;
 				} else {
