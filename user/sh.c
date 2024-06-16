@@ -538,7 +538,7 @@ void runcmd_conditional(char *s) {
 			} else {
 				if (1 || !background_exc) {
 					syscall_ipc_recv(0);
-					wait(r);
+					// wait(r);
 					exit_status = env->env_ipc_value;
 				} else {
 				}
