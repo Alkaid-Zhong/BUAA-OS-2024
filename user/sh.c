@@ -433,6 +433,15 @@ int runcmd(char *s, int background_exc) {
 		while (*s) {
 			job_id = job_id * 10 + (*s++ - '0');
 		}
+		int i;
+		for (i = 1; i <= job_counts; i++) {
+			// debugf("[%08x] status:%d\n", jobs[i].pid, envs[ENVX(jobs[i].pid)].env_status);
+			if (jobs[i].status == 0) {
+				jobs[i].status = envs[ENVX(jobs[i].pid)].env_status == ENV_FREE ? 1 : 0;
+			}
+			printf("[%d] %-10s 0x%08x %s\n", jobs[i].job_id, jobs[i].status == 0 ? "Running" : "Done", jobs[i].pid, jobs[i].cmd);
+		}
+		debugf("kill job %d\n", job_id);
 		if (job_id > job_counts) {
 			user_panic("kill: job (%d) do not exist\n", job_id);
 		}
