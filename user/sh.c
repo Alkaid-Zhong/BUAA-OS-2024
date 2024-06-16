@@ -536,6 +536,7 @@ void runcmd_conditional(char *s) {
 				syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
 				exit();
 			} else {
+				debugf("command %s and op %c started with pid %d\n", cmd_buf, op, r);
 				if (1 || !background_exc) {
 					syscall_ipc_recv(0);
 					// wait(r);
