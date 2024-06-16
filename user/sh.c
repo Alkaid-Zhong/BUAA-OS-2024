@@ -173,7 +173,6 @@ int parsecmd(char **argv, int *rightpipe) {
 		case TOKEN_EOF:
 			return argc;
 		case TOKEN_BACKGOUND_EXC:
-			argv[argc++] = "&";
 			return argc;
 		case TOKEN_WORD:
 			if (argc >= MAXARGS) {
