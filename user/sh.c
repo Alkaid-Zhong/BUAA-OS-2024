@@ -447,19 +447,9 @@ int runcmd(char *s, int background_exc) {
 	debugf("[%08x]runcmd: running command %s, child %08x\n", syscall_getenvid(), s, child);
 
 	if (child >= 0) {
-		if (!background_exc) {
-			syscall_ipc_recv(0);
-			wait(child);
-			exit_status = env->env_ipc_value;
-		} else {
-			
-			jobs[job_counts].job_id = job_counts + 1;
-			jobs[job_counts].pid = child;
-			strcpy(jobs[job_counts].cmd, ori_cmd);
-			jobs[job_counts].status = 0;
-			job_counts++;
-			exit_status = 0;
-		}
+		syscall_ipc_recv(0);
+		wait(child);
+		exit_status = env->env_ipc_value;
 	} else {
 		debugf("spawn %s: %d\n", argv[0], child);
 	}
@@ -536,26 +526,20 @@ void runcmd_conditional(char *s) {
 			}
 			if (background_exc) {
 				debugf("background exc: %s\n", cmd_buf);
+			}
 
-				runcmd(cmd_buf, background_exc);
-
-				exit_status = 0;
-
+			if ((r = fork()) < 0) {
+				user_panic("fork: %d", r);
+			}
+			if (r == 0) {
+				exit_status = runcmd(cmd_buf, background_exc);
+				syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
+				exit();
 			} else {
-
-				if ((r = fork()) < 0) {
-					user_panic("fork: %d", r);
-				}
-				if (r == 0) {
-					exit_status = runcmd(cmd_buf, background_exc);
-					syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
-					exit();
-				} else {
-					syscall_ipc_recv(0);
-					wait(r);
-					exit_status = env->env_ipc_value;
-					// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
-				}
+				syscall_ipc_recv(0);
+				wait(r);
+				exit_status = env->env_ipc_value;
+				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
 			}
 
 		}
