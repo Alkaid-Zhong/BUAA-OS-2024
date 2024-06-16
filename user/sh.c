@@ -538,6 +538,7 @@ void runcmd_conditional(char *s) {
 				if (!background_exc) {
 					syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
 				}
+				debugf("child %08x exit\n");
 				exit();
 			} else {
 				if (!background_exc) {
