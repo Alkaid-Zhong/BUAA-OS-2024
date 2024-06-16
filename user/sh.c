@@ -447,16 +447,16 @@ int runcmd(char *s, int background_exc) {
 	debugf("[%08x]runcmd: running command %s, child %08x\n", syscall_getenvid(), s, child);
 
 	if (child >= 0) {
-		
-		jobs[job_counts].job_id = job_counts + 1;
-		jobs[job_counts].pid = child;
-		strcpy(jobs[job_counts].cmd, ori_cmd);
-		jobs[job_counts].status = 0;
-		job_counts++;
-
-		syscall_ipc_recv(0);
-		wait(child);
-		exit_status = env->env_ipc_value;
+		if (background_exc) {
+			syscall_ipc_try_send(env->env_parent_id, child, 0, 0);
+			syscall_ipc_recv(0);
+			wait(child);
+			exit_status = env->env_ipc_value;
+		} else {
+			syscall_ipc_recv(0);
+			wait(child);
+			exit_status = env->env_ipc_value;
+		}
 	} else {
 		debugf("spawn %s: %d\n", argv[0], child);
 	}
@@ -550,7 +550,15 @@ void runcmd_conditional(char *s) {
 					wait(r);
 					exit_status = env->env_ipc_value;
 				} else {
-					syscall_yield();
+					syscall_ipc_recv(0);
+					int child_pid = env->env_ipc_value;
+					
+					jobs[job_counts].job_id = job_counts + 1;
+					jobs[job_counts].pid = child_pid;
+					strcpy(jobs[job_counts].cmd, cmd_buf);
+					jobs[job_counts].status = 0;
+					job_counts++;
+
 					exit_status = 0;
 				}
 				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
