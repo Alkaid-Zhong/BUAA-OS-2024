@@ -409,6 +409,12 @@ int runcmd(char *s) {
 		int i;
 		for (i = 0; i < job_counts; i++) {
 			printf("[%d] %-10s 0x%08x %s", jobs[i].job_id, "status", jobs[i].pid, jobs[i].cmd);
+		}
+		close_all();
+		if (rightpipe) {
+			wait(rightpipe);
+		}
+		return 0;
 	}
 
 	int child = spawn(argv[0], argv);
