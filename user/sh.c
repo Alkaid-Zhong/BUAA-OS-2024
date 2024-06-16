@@ -578,6 +578,7 @@ void readline(char *buf, u_int n) {
 			}
 			exit();
 		}
+		syscall_yield();
 		if (buf[i] == '\b' || buf[i] == 0x7f) {
 			if (i > 0) {
 				i -= 2;
