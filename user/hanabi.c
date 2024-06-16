@@ -1,6 +1,7 @@
 #include <lib.h>
 
-char *s = "                                                                                                                                                                \n\
+char *s = "\
+                                                                                                                                                                \n\
                                                                                                                                                                 \n\
                                                                                                                                                                 \n\
                                                                                                                                                                 \n\
@@ -63,6 +64,6 @@ char *s = "                                                                     
 \033[0m";
 
 int main() {
-    printf(s);
+    printf("%s", s);
     return 0;
 }
