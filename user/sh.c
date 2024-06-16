@@ -172,6 +172,8 @@ int parsecmd(char **argv, int *rightpipe) {
 		switch (type) {
 		case TOKEN_EOF:
 			return argc;
+		case TOKEN_BACKGOUND_EXC:
+			return argc;
 		case TOKEN_WORD:
 			if (argc >= MAXARGS) {
 				debugf("too many arguments\n");
@@ -354,6 +356,14 @@ int replaceBackquoteCommands(char *cmd) {
     return 0;
 }
 
+int job_counts = 0;
+struct Jobs {
+	int job_id;
+	int pid;
+	char cmd[1024];
+
+} jobs[1024];
+
 int runcmd(char *s) {
 
 	replaceBackquoteCommands(s);
@@ -395,6 +405,11 @@ int runcmd(char *s) {
 		}
 		return 0;
 	}
+	if (strcmp(argv[0], "jobs") == 0) {
+		int i;
+		for (i = 0; i < job_counts; i++) {
+			printf("[%d] %-10s 0x%08x %s", jobs[i].job_id, "status", jobs[i].pid, jobs[i].cmd);
+	}
 
 	int child = spawn(argv[0], argv);
 
@@ -430,7 +445,6 @@ int runcmd(char *s) {
 	return exit_status;
 	// exit();
 }
-
 
 void runcmd_conditional(char *s) {
 	char cmd_buf[1024];
@@ -513,6 +527,10 @@ void runcmd_conditional(char *s) {
 					wait(r);
 					exit_status = env->env_ipc_value;
 				} else {
+					jobs[job_counts].job_id = job_counts + 1;
+					jobs[job_counts].pid = r;
+					strcpy(jobs[job_counts].cmd, cmd_buf);
+					job_counts++;
 					exit_status = 0;
 				}
 				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
