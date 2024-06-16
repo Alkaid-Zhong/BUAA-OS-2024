@@ -376,7 +376,6 @@ int runcmd(char *s, int background_exc) {
 	char *argv[MAXARGS];
 	int rightpipe = 0;
 	int argc = parsecmd(argv, &rightpipe);
-	debugf("[%08x]runcmd: running command %s, argc %d\n", syscall_getenvid(), s, argc);
 	if (argc == 0) {
 		return 0;
 	}
@@ -448,14 +447,13 @@ int runcmd(char *s, int background_exc) {
 	debugf("[%08x]runcmd: running command %s, child %08x\n", syscall_getenvid(), s, child);
 
 	if (child >= 0) {
-		if (child > 0 && background_exc) {
+		if (background_exc) {
 			jobs[job_counts].job_id = job_counts + 1;
 			jobs[job_counts].pid = child;
 			strcpy(jobs[job_counts].cmd, ori_cmd);
 			jobs[job_counts].status = 0;
 			job_counts++;
 			exit_status = 0;
-			syscall_yield();
 		}
 		syscall_ipc_recv(0);
 		if (!background_exc) {
