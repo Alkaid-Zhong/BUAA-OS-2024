@@ -172,13 +172,6 @@ int parsecmd(char **argv, int *rightpipe) {
 		switch (type) {
 		case TOKEN_EOF:
 			return argc;
-		case TOKEN_BACKGOUND_EXC:
-			if (argc == 0) {
-				debugf("syntax error: & not followed by command\n");
-				exit();
-			}
-			argv[argc++] = "\0";
-			return argc;
 		case TOKEN_WORD:
 			if (argc >= MAXARGS) {
 				debugf("too many arguments\n");
@@ -490,37 +483,18 @@ void runcmd_conditional(char *s) {
 			(last_op == '|' && exit_status != 0) ||
 			(last_op == ';')) {
 
-				
-			char *argv[MAXARGS];
-			int rightpipe = 0;
-			
-			getNextToken(cmd_buf, 0);
-			int argc = parsecmd(argv, &rightpipe);
-			int background_exc = 0;
-			if (argc == 0) {
-				continue;
+			if ((r = fork()) < 0) {
+				user_panic("fork: %d", r);
 			}
-			if (argv[argc - 1][0] == '\0') { // background execution
-				background_exc = 1;
-				argc--;
-			}
-			argv[argc] = 0;
-			if (background_exc) {
-
+			if (r == 0) {
+				exit_status = runcmd(cmd_buf);
+				syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
+				exit();
 			} else {
-				if ((r = fork()) < 0) {
-					user_panic("fork: %d", r);
-				}
-				if (r == 0) {
-					exit_status = runcmd(cmd_buf);
-					syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
-					exit();
-				} else {
-					syscall_ipc_recv(0);
-					wait(r);
-					exit_status = env->env_ipc_value;
-					// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
-				}
+				syscall_ipc_recv(0);
+				wait(r);
+				exit_status = env->env_ipc_value;
+				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
 			}
 
 		}
