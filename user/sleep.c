@@ -12,5 +12,6 @@ int main(int argc, char **argv) {
     for (int t = 0; t < n * ITER; t++) {
         syscall_yield();
     }
+    printf("sleep done, pid: %08x\n", syscall_getenvid());
     return 0;
 }
