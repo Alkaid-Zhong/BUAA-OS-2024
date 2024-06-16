@@ -532,17 +532,16 @@ void runcmd_conditional(char *s) {
 				user_panic("fork: %d", r);
 			}
 			if (r == 0) {
-				syscall_yield();
 				exit_status = runcmd(cmd_buf, background_exc);
 				syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
 				exit();
 			} else {
-				debugf("command %s and op %c started with pid %d\n", cmd_buf, op, r);
-				if (1 || !background_exc) {
+				if (!background_exc) {
 					syscall_ipc_recv(0);
-					// wait(r);
+					wait(r);
 					exit_status = env->env_ipc_value;
 				} else {
+					exit_status = 0;
 				}
 				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
 			}
@@ -555,8 +554,6 @@ void runcmd_conditional(char *s) {
 			break;
 		}
 	}
-
-	debugf("conditional running cmd: %s finish\n", s);
 }
 
 
