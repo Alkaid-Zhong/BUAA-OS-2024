@@ -487,7 +487,7 @@ void runcmd_conditional(char *s) {
 			int i;
 			int background_exc = 0;
 			for (i = len - 1; i >= 1; i--) {
-				if (cmd_buf[i] == '&' && strchr(WHITESPACE SYMBOLS, cmd_buf[i-1]) == 0) {
+				if (cmd_buf[i] == '&' && strchr(WHITESPACE, cmd_buf[i-1]) != 0) {
 					background_exc = 1;
 					break;
 				}
