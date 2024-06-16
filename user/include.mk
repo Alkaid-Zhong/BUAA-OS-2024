@@ -40,7 +40,7 @@ ifeq ($(call lab-ge,6), true)
 			sleep.b \
 			true.b \
 			false.b \
-			hanabi.b \
+			escape.b \
 			testpipe.b \
 			testpiperace.b \
 			testptelibrary.b \
