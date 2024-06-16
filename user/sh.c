@@ -365,7 +365,9 @@ struct Jobs {
 	int status; // 0: running, 1: done
 } jobs[1024];
 
-int runcmd(char *s) {
+int runcmd(char *s, int background_exc) {
+	char ori_cmd[1024];
+	strcpy(ori_cmd, s);
 
 	replaceBackquoteCommands(s);
 	debugf("[%08x]runcmd: running command %s\n", syscall_getenvid(), s);
@@ -375,14 +377,8 @@ int runcmd(char *s) {
 	char *argv[MAXARGS];
 	int rightpipe = 0;
 	int argc = parsecmd(argv, &rightpipe);
-	int background_exc = 0;
 	if (argc == 0) {
 		return 0;
-	}
-	if (strcmp(argv[argc-1], "&") == 0) {
-		background_exc = 1;
-		argv[argc-1] = 0;
-		argc--;
 	}
 	argv[argc] = 0;
 
@@ -449,6 +445,17 @@ int runcmd(char *s) {
 	int exit_status = -1;
 
 	if (child >= 0) {
+		if (child > 0 && background_exc) {
+			jobs[job_counts].job_id = job_counts + 1;
+			jobs[job_counts].pid = child;
+			strcpy(jobs[job_counts].cmd, ori_cmd);
+			jobs[job_counts].status = 0;
+			job_counts++;
+			exit_status = 0;
+			debugf("child: %08x, env_status: %d\n", child, envs[ENVX(child)].env_status);
+			syscall_yield();
+			debugf("child: %08x, env_status: %d\n", child, envs[ENVX(child)].env_status);
+		}
 		syscall_ipc_recv(0);
 		wait(child);
 		exit_status = env->env_ipc_value;
@@ -528,36 +535,23 @@ void runcmd_conditional(char *s) {
 			}
 			if (background_exc) {
 				debugf("background exc: %s\n", cmd_buf);
-			}
-
-			if ((r = fork()) < 0) {
-				user_panic("fork: %d", r);
-			}
-			if (r == 0) {
-				exit_status = runcmd(cmd_buf);
-				if (!background_exc) {
-					syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
-				}
-				debugf("child %08x exit\n");
-				exit();
+				runcmd(cmd_buf, 1);
+				exit_status = 0;
 			} else {
-				if (!background_exc) {
+
+				if ((r = fork()) < 0) {
+					user_panic("fork: %d", r);
+				}
+				if (r == 0) {
+					exit_status = runcmd(cmd_buf, 0);
+					syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
+					exit();
+				} else {
 					syscall_ipc_recv(0);
 					wait(r);
 					exit_status = env->env_ipc_value;
-				} else {
-					jobs[job_counts].job_id = job_counts + 1;
-					jobs[job_counts].pid = r;
-					strcpy(jobs[job_counts].cmd, cmd_buf);
-					jobs[job_counts].status = 0;
-					job_counts++;
-					exit_status = 0;
-					debugf("child: %08x, env_status: %d\n", r, envs[ENVX(r)].env_status);
-					syscall_yield();
-					debugf("child: %08x, env_status: %d\n", r, envs[ENVX(r)].env_status);
-
+					// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
 				}
-				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
 			}
 
 		}
