@@ -527,7 +527,9 @@ void runcmd_conditional(char *s) {
 			}
 			if (r == 0) {
 				exit_status = runcmd(cmd_buf);
-				syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
+				if (!background_exc) {
+					syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
+				}
 				exit();
 			} else {
 				if (!background_exc) {
