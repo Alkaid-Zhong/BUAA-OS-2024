@@ -471,7 +471,7 @@ int runcmd(char *s, int background_exc) {
 			user_panic("kill: job (%d) do not exist\n", job_id);
 		}
 		if (jobs[job_id - 1].status == 0) {
-			syscall_env_destroy_force(jobs[job_id - 1].pid);
+			syscall_env_destroy(jobs[job_id - 1].pid);
 			jobs[job_id - 1].status = 1;
 		} else {
 			user_panic("kill: (0x%08x) not running\n", jobs[job_id - 1].pid);
