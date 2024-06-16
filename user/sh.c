@@ -443,6 +443,9 @@ int runcmd(char *s, int background_exc) {
 
 	int exit_status = -1;
 
+	
+	debugf("[%08x]runcmd: running command %s, child %08x\n", syscall_getenvid(), s, child);
+
 	if (child >= 0) {
 		if (child > 0 && background_exc) {
 			jobs[job_counts].job_id = job_counts + 1;
