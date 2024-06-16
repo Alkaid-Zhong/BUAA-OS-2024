@@ -408,6 +408,7 @@ int runcmd(char *s) {
 	if (strcmp(argv[0], "jobs") == 0) {
 		int i;
 		for (i = 0; i < job_counts; i++) {
+			printf("[%08x] status:%d\n", jobs[i].pid, envs[ENVX(jobs[i].pid)].env_status);
 			if (jobs[i].status == 0) {
 				jobs[i].status = envs[ENVX(jobs[i].pid)].env_status == ENV_FREE ? 1 : 0;
 			}
