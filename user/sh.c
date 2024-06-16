@@ -369,7 +369,7 @@ int runcmd(char *s, int background_exc) {
 	strcpy(ori_cmd, s);
 
 	replaceBackquoteCommands(s);
-	debugf("[%08x]runcmd: running command %s, background_exc %d\n", syscall_getenvid(), s, background_exc);
+	// debugf("[%08x]runcmd: running command %s, background_exc %d\n", syscall_getenvid(), s, background_exc);
 
 	getNextToken(s, 0);
 
@@ -410,7 +410,7 @@ int runcmd(char *s, int background_exc) {
 	if (strcmp(argv[0], "jobs") == 0) {
 		int i;
 		for (i = 0; i < job_counts; i++) {
-			printf("[%08x] status:%d\n", jobs[i].pid, envs[ENVX(jobs[i].pid)].env_status);
+			// debugf("[%08x] status:%d\n", jobs[i].pid, envs[ENVX(jobs[i].pid)].env_status);
 			if (jobs[i].status == 0) {
 				jobs[i].status = envs[ENVX(jobs[i].pid)].env_status == ENV_FREE ? 1 : 0;
 			}
@@ -444,7 +444,7 @@ int runcmd(char *s, int background_exc) {
 	int exit_status = -1;
 
 	
-	debugf("[%08x]runcmd: running command %s, child %08x\n", syscall_getenvid(), s, child);
+	// debugf("[%08x]runcmd: running command %s, child %08x\n", syscall_getenvid(), s, child);
 
 	if (child >= 0) {
 		if (background_exc) {
@@ -463,7 +463,7 @@ int runcmd(char *s, int background_exc) {
 	if (rightpipe) {
 		wait(rightpipe);
 	}
-	debugf("command %s exit with return value %d\n", argv[0], exit_status);
+	// debugf("command %s exit with return value %d\n", argv[0], exit_status);
 	return exit_status;
 	// exit();
 }
@@ -532,7 +532,7 @@ void runcmd_conditional(char *s) {
 				}
 			}
 			if (background_exc) {
-				debugf("background exc: %s\n", cmd_buf);
+				// debugf("background exc: %s\n", cmd_buf);
 			}
 
 			if ((r = fork()) < 0) {
