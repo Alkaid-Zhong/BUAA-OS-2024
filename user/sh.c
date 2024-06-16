@@ -554,6 +554,8 @@ void runcmd_conditional(char *s) {
 			break;
 		}
 	}
+
+	debugf("conditional running cmd: %s finish\n", s);
 }
 
 
