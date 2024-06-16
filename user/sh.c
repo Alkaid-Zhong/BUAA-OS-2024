@@ -408,7 +408,9 @@ int runcmd(char *s) {
 	if (strcmp(argv[0], "jobs") == 0) {
 		int i;
 		for (i = 0; i < job_counts; i++) {
-			jobs[i].status = envs[ENVX(jobs[i].pid)].env_status == ENV_FREE ? 1 : 0;
+			if (jobs[i].status == 0) {
+				jobs[i].status = envs[ENVX(jobs[i].pid)].env_status == ENV_FREE ? 1 : 0;
+			}
 			printf("[%d] %-10s 0x%08x %s\n", jobs[i].job_id, jobs[i].status == 0 ? "Running" : "Done", jobs[i].pid, jobs[i].cmd);
 		}
 		close_all();
