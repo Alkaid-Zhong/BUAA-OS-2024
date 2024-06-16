@@ -173,6 +173,7 @@ int parsecmd(char **argv, int *rightpipe) {
 		case TOKEN_EOF:
 			return argc;
 		case TOKEN_BACKGOUND_EXC:
+			argv[argc++] = "&";
 			return argc;
 		case TOKEN_WORD:
 			if (argc >= MAXARGS) {
@@ -374,8 +375,14 @@ int runcmd(char *s) {
 	char *argv[MAXARGS];
 	int rightpipe = 0;
 	int argc = parsecmd(argv, &rightpipe);
+	int background_exc = 0;
 	if (argc == 0) {
 		return 0;
+	}
+	if (strcmp(argv[argc-1], "&") == 0) {
+		background_exc = 1;
+		argv[argc-1] = 0;
+		argc--;
 	}
 	argv[argc] = 0;
 
@@ -443,7 +450,9 @@ int runcmd(char *s) {
 
 	if (child >= 0) {
 		syscall_ipc_recv(0);
-		wait(child);
+		if (!background_exc) {
+			wait(child);
+		}
 		exit_status = env->env_ipc_value;
 	} else {
 		debugf("spawn %s: %d\n", argv[0], child);
