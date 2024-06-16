@@ -369,7 +369,7 @@ int runcmd(char *s, int background_exc) {
 	strcpy(ori_cmd, s);
 
 	replaceBackquoteCommands(s);
-	debugf("[%08x]runcmd: running command %s\n", syscall_getenvid(), s);
+	debugf("[%08x]runcmd: running command %s, background_exc %d\n", syscall_getenvid(), s, background_exc);
 
 	getNextToken(s, 0);
 
