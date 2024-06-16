@@ -483,6 +483,20 @@ void runcmd_conditional(char *s) {
 			(last_op == '|' && exit_status != 0) ||
 			(last_op == ';')) {
 
+			int len = strlen(cmd_buf);
+			int i;
+			int background_exc = 0;
+			for (i = len - 1; i >= 1; i--) {
+				if (cmd_buf[i] == '&' && strchr(WHITESPACE SYMBOLS, cmd_buf[i-1]) == 0) {
+					background_exc = 1;
+					break;
+				}
+			}
+			if (background_exc) {
+				debugf("background exc: %s\n", cmd_buf);
+				cmd_buf[i] = '\0';
+			}
+
 			if ((r = fork()) < 0) {
 				user_panic("fork: %d", r);
 			}
