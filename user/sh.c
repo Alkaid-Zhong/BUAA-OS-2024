@@ -376,6 +376,7 @@ int runcmd(char *s, int background_exc) {
 	char *argv[MAXARGS];
 	int rightpipe = 0;
 	int argc = parsecmd(argv, &rightpipe);
+	debugf("[%08x]runcmd: running command %s, argc %d\n", syscall_getenvid(), s, argc);
 	if (argc == 0) {
 		return 0;
 	}
