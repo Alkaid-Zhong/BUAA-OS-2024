@@ -551,6 +551,7 @@ void runcmd_conditional(char *s) {
 					jobs[job_counts].status = 0;
 					job_counts++;
 					exit_status = 0;
+					syscall_yield();
 				}
 				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
 			}
