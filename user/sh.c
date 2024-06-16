@@ -433,11 +433,11 @@ int runcmd(char *s, int background_exc) {
 		while (*s) {
 			job_id = job_id * 10 + (*s++ - '0');
 		}
-		if (job_id >= job_counts) {
+		if (job_id > job_counts) {
 			user_panic("fg: (0x%08x) not running\n", job_id);
 		}
 		if (jobs[job_id].status == 0) {
-			debugf("kill job (%d) (0x%08x): %d\n", job_id, jobs[job_id].pid, syscall_env_destroy(jobs[job_id].pid));
+			debugf("kill job (%d) (0x%08x): %d\n", job_id, jobs[job_id - 1].pid, syscall_env_destroy(jobs[job_id - 1].pid));
 		} else {
 			user_panic("fg: job (%d) do not exist\n", job_id);
 		}
