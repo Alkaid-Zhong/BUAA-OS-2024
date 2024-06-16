@@ -371,12 +371,6 @@ int runcmd(char *s) {
 	char *argv[MAXARGS];
 	int rightpipe = 0;
 	int argc = parsecmd(argv, &rightpipe);
-	int background_exc = 0;
-	if (argv[argc - 1][0] == '\0') {
-		debugf("background execution: <%s>\n", argv[0]);
-		background_exc = 1;
-		argc--;
-	}
 	if (argc == 0) {
 		return 0;
 	}
@@ -431,9 +425,7 @@ int runcmd(char *s) {
 
 	if (child >= 0) {
 		syscall_ipc_recv(0);
-		if (!background_exc) {
-			wait(child);
-		}
+		wait(child);
 		exit_status = env->env_ipc_value;
 	} else {
 		debugf("spawn %s: %d\n", argv[0], child);
@@ -498,18 +490,35 @@ void runcmd_conditional(char *s) {
 			(last_op == '|' && exit_status != 0) ||
 			(last_op == ';')) {
 
-			if ((r = fork()) < 0) {
-				user_panic("fork: %d", r);
+				
+			char *argv[MAXARGS];
+			int rightpipe = 0;
+			int argc = parsecmd(argv, &rightpipe);
+			int background_exc = 0;
+			if (argc == 0) {
+				continue;
 			}
-			if (r == 0) {
-				exit_status = runcmd(cmd_buf);
-				syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
-				exit();
+			if (argv[argc - 1][0] == '\0') { // background execution
+				background_exc = 1;
+				argc--;
+			}
+			argv[argc] = 0;
+			if (background_exc) {
+				
 			} else {
-				syscall_ipc_recv(0);
-				wait(r);
-				exit_status = env->env_ipc_value;
-				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
+				if ((r = fork()) < 0) {
+					user_panic("fork: %d", r);
+				}
+				if (r == 0) {
+					exit_status = runcmd(cmd_buf);
+					syscall_ipc_try_send(env->env_parent_id, exit_status, 0, 0);
+					exit();
+				} else {
+					syscall_ipc_recv(0);
+					wait(r);
+					exit_status = env->env_ipc_value;
+					// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
+				}
 			}
 
 		}
