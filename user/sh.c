@@ -654,7 +654,7 @@ int main(int argc, char **argv) {
 			printf("\n$ ");
 		}
 		readline(buf, sizeof buf);
-
+		printf("%s\n", buf);
 		if (buf[0] == '#') {
 			continue;
 		}
