@@ -509,7 +509,9 @@ void runcmd_conditional(char *s) {
 				exit();
 			} else {
 				syscall_ipc_recv(0);
-				wait(r);
+				if (!background_exc) {
+					wait(r);
+				}
 				exit_status = env->env_ipc_value;
 				// debugf("command %s and op %c exit with return value %d\n", cmd_buf, op, exit_status);
 			}
