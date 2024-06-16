@@ -367,7 +367,7 @@ struct Jobs {
 int runcmd(char *s) {
 
 	replaceBackquoteCommands(s);
-	// debugf("runcmd: running command %s\n", s);
+	debugf("runcmd: running command %s\n", s);
 
 	getNextToken(s, 0);
 
@@ -450,7 +450,7 @@ int runcmd(char *s) {
 	if (rightpipe) {
 		wait(rightpipe);
 	}
-	// debugf("command %s exit with return value %d\n", argv[0], exit_status);
+	debugf("command %s exit with return value %d\n", argv[0], exit_status);
 	return exit_status;
 	// exit();
 }
