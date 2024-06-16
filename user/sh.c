@@ -368,7 +368,7 @@ struct Jobs {
 int runcmd(char *s) {
 
 	replaceBackquoteCommands(s);
-	debugf("runcmd: running command %s\n", s);
+	debugf("[%08x]runcmd: running command %s\n", syscall_getenvid(), s);
 
 	getNextToken(s, 0);
 
