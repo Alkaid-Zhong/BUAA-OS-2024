@@ -451,7 +451,7 @@ int runcmd(char *s, int background_exc) {
 			jobs[job_counts].status = 0;
 			job_counts++;
 			exit_status = 0;
-			syscall_yield();
+			// syscall_yield();
 		}
 		syscall_ipc_recv(0);
 		if (!background_exc) {
