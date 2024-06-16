@@ -361,7 +361,7 @@ struct Jobs {
 	int job_id;
 	int pid;
 	char cmd[1024];
-
+	int status; // 0: running, 1: done
 } jobs[1024];
 
 int runcmd(char *s) {
@@ -408,7 +408,8 @@ int runcmd(char *s) {
 	if (strcmp(argv[0], "jobs") == 0) {
 		int i;
 		for (i = 0; i < job_counts; i++) {
-			printf("[%d] %-10s 0x%08x %s\n", jobs[i].job_id, "status", jobs[i].pid, jobs[i].cmd);
+			jobs[i].status = envs[ENVX(jobs[i].pid)].env_status == ENV_FREE ? 1 : 0;
+			printf("[%d] %-10s 0x%08x %s\n", jobs[i].job_id, jobs[i].status == 0 ? "Running" : "Done", jobs[i].pid, jobs[i].cmd);
 		}
 		close_all();
 		if (rightpipe) {
@@ -535,6 +536,7 @@ void runcmd_conditional(char *s) {
 					jobs[job_counts].job_id = job_counts + 1;
 					jobs[job_counts].pid = r;
 					strcpy(jobs[job_counts].cmd, cmd_buf);
+					jobs[job_counts].status = 0;
 					job_counts++;
 					exit_status = 0;
 				}
