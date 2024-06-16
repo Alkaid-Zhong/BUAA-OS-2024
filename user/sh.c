@@ -447,6 +447,9 @@ int runcmd(char *s, int background_exc) {
 				}
 			}
 		}
+		if (!killed) {
+			user_panic("fg: job (%d) do not exist\n", job_id);
+		}
 		close_all();
 		if (rightpipe) {
 			wait(rightpipe);
