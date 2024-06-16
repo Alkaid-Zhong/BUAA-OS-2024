@@ -409,7 +409,7 @@ int runcmd(char *s, int background_exc) {
 	}
 	if (strcmp(argv[0], "jobs") == 0) {
 		int i;
-		for (i = 0; i < job_counts; i++) {
+		for (i = 1; i <= job_counts; i++) {
 			// debugf("[%08x] status:%d\n", jobs[i].pid, envs[ENVX(jobs[i].pid)].env_status);
 			if (jobs[i].status == 0) {
 				jobs[i].status = envs[ENVX(jobs[i].pid)].env_status == ENV_FREE ? 1 : 0;
@@ -433,13 +433,13 @@ int runcmd(char *s, int background_exc) {
 		while (*s) {
 			job_id = job_id * 10 + (*s++ - '0');
 		}
-		if (job_id > job_counts) {
+		if (job_id >= job_counts) {
 			user_panic("kill: job (%d) do not exist\n", job_id);
 		}
-		if (jobs[job_id - 1].status == 0) {
-			syscall_env_destroy_force(jobs[job_id - 1].pid);
+		if (jobs[job_id].status == 0) {
+			syscall_env_destroy_force(jobs[job_id].pid);
 		} else {
-			user_panic("kill: (0x%08x) not running\n", jobs[job_id - 1].pid);
+			user_panic("kill: (0x%08x) not running\n", jobs[job_id].pid);
 		}
 		close_all();
 		if (rightpipe) {
@@ -578,11 +578,11 @@ void runcmd_conditional(char *s) {
 					syscall_ipc_recv(0);
 					int child_pid = env->env_ipc_value;
 					
-					jobs[job_counts].job_id = job_counts + 1;
+					job_counts++;
+					jobs[job_counts].job_id = job_counts;
 					jobs[job_counts].pid = child_pid;
 					strcpy(jobs[job_counts].cmd, cmd_buf);
 					jobs[job_counts].status = 0;
-					job_counts++;
 
 					exit_status = 0;
 				}
