@@ -422,6 +422,37 @@ int runcmd(char *s, int background_exc) {
 		}
 		return 0;
 	}
+	if (strcmp(argv[0], "fg") == 0) {
+	}
+	if (strcmp(argv[0], "kill") == 0) {
+		if (argc != 2) {
+			user_panic("kill: invalid arguments\n");
+		}
+		int job_id = 0;
+		char *s = argv[1];
+		while (*s) {
+			job_id = job_id * 10 + (*s++ - '0');
+		}
+		int killed = 0;
+		int i;
+		for (i = 0; i < job_counts; i++) {
+			if (jobs[i].job_id == job_id) {
+				if (jobs[i].status == 0) {
+					syscall_env_destroy(jobs[i].pid);
+					syscall_yield();
+					killed = 1;
+					break;
+				} else {
+					user_panic("fg: (0x%08x) not running\n", jobs[i].pid);
+				}
+			}
+		}
+		close_all();
+		if (rightpipe) {
+			wait(rightpipe);
+		}
+		return 0;
+	}
 
 	int child = spawn(argv[0], argv);
 
